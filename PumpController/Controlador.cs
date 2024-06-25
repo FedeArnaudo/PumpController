@@ -3,11 +3,9 @@ using System.Threading;
 
 namespace PumpController
 {
-    abstract class Controlador
+    internal abstract class Controlador
     {
-        public Controlador()
-        { }
-
+        public Controlador() { }
 
         // Instancia de Singleton
         private static Controlador instancia = null;
@@ -19,6 +17,8 @@ namespace PumpController
         public static Mutex working = new Mutex();
         // Tiempo de espera entre cada procesamiento en segundos.
         private static readonly int loopDelaySeconds = 2;
+
+        public static bool endWork = false;
 
         public abstract void GrabarConfigEstacion();
 

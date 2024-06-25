@@ -25,26 +25,26 @@ namespace PumpController
         {
             Estacion estacion = Estacion.InstanciaEstacion;
             List<ConfigEstacion> infoSurtidores = new List<ConfigEstacion>();
-            List<Surtidor> tempSurtidores = estacion.nivelesDePrecio[0];
+            List<Surtidor> tempSurtidores = estacion.NivelesDePrecio[0];
             foreach (Surtidor surtidor in tempSurtidores)
             {
-                List<Manguera> tempManguera = surtidor.mangueras;
+                List<Manguera> tempManguera = surtidor.Mangueras;
                 foreach (Manguera manguera in tempManguera)
                 {
                     string letra = "A";
-                    if (manguera.numeroDeManquera == 2)
+                    if (manguera.NumeroDeManquera == 2)
                     {
                         letra = "B";
                     }
-                    else if (manguera.numeroDeManquera == 3)
+                    else if (manguera.NumeroDeManquera == 3)
                     {
                         letra = "C";
                     }
-                    else if (manguera.numeroDeManquera == 4)
+                    else if (manguera.NumeroDeManquera == 4)
                     {
                         letra = "D";
                     }
-                    infoSurtidores.Add(new ConfigEstacion(surtidor.numeroDeSurtidor.ToString(), letra, manguera.producto.numeroDeProducto, manguera.producto.precioUnitario, manguera.producto.descripcion));
+                    infoSurtidores.Add(new ConfigEstacion(surtidor.NumeroDeSurtidor.ToString(), letra, manguera.Producto.NumeroDeProducto, manguera.Producto.PrecioUnitario, manguera.Producto.Descripcion));
                 }
             }
             return infoSurtidores;

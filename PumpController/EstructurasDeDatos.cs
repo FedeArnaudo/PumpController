@@ -2,26 +2,27 @@
 
 namespace PumpController
 {
+    #region ESTACION
     public class Estacion
     {
         public readonly int NUM_MAX_NIVELES = 5;
         public Estacion()
         {
-            nivelesDePrecio = new List<List<Surtidor>>();
-            surtidores = new List<Surtidor>();
-            tanques = new List<Tanque>();
-            productos = new List<Producto>();
+            NivelesDePrecio = new List<List<Surtidor>>();
+            Surtidores = new List<Surtidor>();
+            Tanques = new List<Tanque>();
+            Productos = new List<Producto>();
         }
         // Instancia de Singleton
         public static Estacion InstanciaEstacion { get; } = new Estacion();
-        public int numeroDeSurtidores { get; set; }
-        public int numeroDeTanques { get; set; }
-        public int numeroDeProductos { get; set; }
-        public int numeroDeMangueras { get; set; }
-        public List<List<Surtidor>> nivelesDePrecio { get; set; }
-        public List<Surtidor> surtidores { get; set; }
-        public List<Tanque> tanques { get; set; }
-        public List<Producto> productos { get; set; }
+        public int NumeroDeSurtidores { get; set; }
+        public int NumeroDeTanques { get; set; }
+        public int NumeroDeProductos { get; set; }
+        public int NumeroDeMangueras { get; set; }
+        public List<List<Surtidor>> NivelesDePrecio { get; set; }
+        public List<Surtidor> Surtidores { get; set; }
+        public List<Tanque> Tanques { get; set; }
+        public List<Producto> Productos { get; set; }
     }
     public class ConfigEstacion
     {
@@ -43,18 +44,18 @@ namespace PumpController
     {
         public Surtidor()
         {
-            mangueras = new List<Manguera>();
+            Mangueras = new List<Manguera>();
         }
-        public int nivelDeSurtidor { get; set; }  // indica al nivel de precio al que trabaja
-        public int tipoDeSurtidor { get; set; }   // indica la cantidad de mangueras que tiene ese surtidor
-        public List<Manguera> mangueras { get; set; }
-        public int numeroDeSurtidor { get; set; }
+        public int NivelDeSurtidor { get; set; }  // indica al nivel de precio al que trabaja
+        public int TipoDeSurtidor { get; set; }   // indica la cantidad de mangueras que tiene ese surtidor
+        public List<Manguera> Mangueras { get; set; }
+        public int NumeroDeSurtidor { get; set; }
 
         class SurtidorPorNivel
         {
-            public string numeroDeNivel { get; set; }
-            public string numeroDeSurtidor { get; set; }
-            public string tipoDeSurtidor { get; set; } // indica la cantidad de mangueras que tiene ese surtidor
+            public string NumeroDeNivel { get; set; }
+            public string NumeroDeSurtidor { get; set; }
+            public string TipoDeSurtidor { get; set; } // indica la cantidad de mangueras que tiene ese surtidor
         }
     }
     public class Tanque
@@ -77,22 +78,24 @@ namespace PumpController
     {
         public Manguera()
         { }
-        public int numeroDeManquera { get; set; }
-        public Producto producto { get; set; }
-        public Tanque tanque { get; set; }
+        public int NumeroDeManquera { get; set; }
+        public Producto Producto { get; set; }
+        public Tanque Tanque { get; set; }
     }
     public class Producto
     {
         public Producto()
         {
-            descripcion = "";
+            Descripcion = "";
         }
 
-        public string numeroDeProducto { get; set; }
-        public string numeroPorDespacho { get; set; }
-        public string precioUnitario { get; set; }
-        public string descripcion { get; set; }
+        public string NumeroDeProducto { get; set; }
+        public string NumeroPorDespacho { get; set; }
+        public string PrecioUnitario { get; set; }
+        public string Descripcion { get; set; }
     }
+    #endregion
+    #region DESPACHO
     public class Despacho
     {
         public Despacho()
@@ -109,23 +112,23 @@ namespace PumpController
             ANULADO,
             DETENIDO
         }
-        public ESTADO_SURTIDOR statusUltimaVenta { get; set; }
-        public int nroUltimaVenta { get; set; }
-        public int productoUltimaVenta { get; set; }
-        public string montoUltimaVenta { get; set; }
-        public string volumenUltimaVenta { get; set; }
-        public string ppuUltimaVenta { get; set; }
-        public bool ultimaVentaFacturada { get; set; }
-        public string idUltimaVenta { get; set; }
+        public ESTADO_SURTIDOR StatusUltimaVenta { get; set; }
+        public int NroUltimaVenta { get; set; }
+        public int ProductoUltimaVenta { get; set; }
+        public string MontoUltimaVenta { get; set; }
+        public string VolumenUltimaVenta { get; set; }
+        public string PpuUltimaVenta { get; set; }
+        public bool UltimaVentaFacturada { get; set; }
+        public string IdUltimaVenta { get; set; }
 
-        public ESTADO_SURTIDOR statusVentaAnterior { get; set; }
-        public int nroVentaAnterior { get; set; }
-        public int productoVentaAnterior { get; set; }
-        public string montoVentaAnterior { get; set; }
-        public string volumenVentaAnterios { get; set; }
-        public string ppuVentaAnterior { get; set; }
-        public bool ventaAnteriorFacturada { get; set; }
-        public string idVentaAnterior { get; set; }
+        public ESTADO_SURTIDOR StatusVentaAnterior { get; set; }
+        public int NroVentaAnterior { get; set; }
+        public int ProductoVentaAnterior { get; set; }
+        public string MontoVentaAnterior { get; set; }
+        public string VolumenVentaAnterios { get; set; }
+        public string PpuVentaAnterior { get; set; }
+        public bool VentaAnteriorFacturada { get; set; }
+        public string IdVentaAnterior { get; set; }
     }
     public class InfoDespacho
     {
@@ -140,6 +143,7 @@ namespace PumpController
         public int YPFRuta { get; set; }
         public string Desc { get; set; }
     }
+    #endregion
     #region CierreDeTurno
     public class CierreDeTurno
     {

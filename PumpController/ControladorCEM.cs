@@ -16,16 +16,16 @@ namespace PumpController
             Estacion estacion = conectorCEM.ConfiguracionDeLaEstacion();
             try
             {
-                List<Surtidor> tempSurtidores = estacion.nivelesDePrecio[0];
+                List<Surtidor> tempSurtidores = estacion.NivelesDePrecio[0];
                 int numeroDeManguera = 1;
                 foreach (Surtidor surtidor in tempSurtidores)
                 {
                     string campos = "IdSurtidor,Manguera,Producto,Precio,DescProd";
-                    List<Manguera> tempManguera = surtidor.mangueras;
+                    List<Manguera> tempManguera = surtidor.Mangueras;
                     foreach (Manguera manguera in tempManguera)
                     {
                         string letra = null;
-                        switch (manguera.numeroDeManquera)
+                        switch (manguera.NumeroDeManquera)
                         {
                             case 1:
                                 letra = "A";
@@ -43,23 +43,23 @@ namespace PumpController
                                 break;
                         }
                         string rows = string.Format("{0},'{1}','{2}','{3}','{4}'",
-                            surtidor.numeroDeSurtidor,
+                            surtidor.NumeroDeSurtidor,
                             letra,
-                            manguera.producto.numeroDeProducto,
-                            manguera.producto.precioUnitario.ToString(),
-                            manguera.producto.descripcion);
+                            manguera.Producto.NumeroDeProducto,
+                            manguera.Producto.PrecioUnitario.ToString(),
+                            manguera.Producto.Descripcion);
 
-                        DataTable tabla = ConectorSQLite.Dt_query("SELECT * FROM Surtidores WHERE IdSurtidor = " + surtidor.numeroDeSurtidor + " AND Manguera = '" + letra + "'");
+                        DataTable tabla = ConectorSQLite.Dt_query("SELECT * FROM Surtidores WHERE IdSurtidor = " + surtidor.NumeroDeSurtidor + " AND Manguera = '" + letra + "'");
 
                         _ = tabla.Rows.Count == 0
                             ? ConectorSQLite.Query(string.Format("INSERT INTO Surtidores ({0}) VALUES ({1})", campos, rows))
                             : ConectorSQLite.Query(string.Format("UPDATE Surtidores SET Producto = ('{0}'), Precio = ('{1}'), DescProd = ('{2}') WHERE IdSurtidor = ({3}) AND Manguera = ('{4}')",
-                                manguera.producto.numeroDeProducto,
-                                manguera.producto.precioUnitario.ToString(),
-                                manguera.producto.descripcion,
-                                surtidor.numeroDeSurtidor,
+                                manguera.Producto.NumeroDeProducto,
+                                manguera.Producto.PrecioUnitario.ToString(),
+                                manguera.Producto.Descripcion,
+                                surtidor.NumeroDeSurtidor,
                                 letra));
-                        _ = Log.Instance.WriteLog(string.Format("SURT: ({0}) Cem44: ({1}) Desc: ({2})", numeroDeManguera, surtidor.numeroDeSurtidor + letra, manguera.producto.descripcion), Log.LogType.t_info);
+                        _ = Log.Instance.WriteLog(string.Format("SURT: ({0}) Cem44: ({1}) Desc: ({2})", numeroDeManguera, surtidor.NumeroDeSurtidor + letra, manguera.Producto.Descripcion), Log.LogType.t_info);
                         numeroDeManguera++;
                     }
                 }
@@ -71,7 +71,7 @@ namespace PumpController
         }
         public override void GrabarTanques()
         {
-            List<Tanque> tanques = conectorCEM.InfoTanques(Estacion.InstanciaEstacion.tanques.Count);
+            List<Tanque> tanques = conectorCEM.InfoTanques(Estacion.InstanciaEstacion.Tanques.Count);
             try
             {
                 for (int i = 0; i < tanques.Count; i++)
@@ -142,10 +142,10 @@ namespace PumpController
                 // Grabar cierresxmanguera
                 query = "INSERT INTO cierresxManguera (id, surtidor, manguera, monto, volumen) VALUES (" + id + ", {0})";
                 int contador = 0;
-                for (int i = 0; i < estacion.numeroDeSurtidores; i++)
+                for (int i = 0; i < estacion.NumeroDeSurtidores; i++)
                 {
-                    List<Surtidor> surtidores = estacion.nivelesDePrecio[0];
-                    for (int j = 0; j < surtidores[i].tipoDeSurtidor; j++)
+                    List<Surtidor> surtidores = estacion.NivelesDePrecio[0];
+                    for (int j = 0; j < surtidores[i].TipoDeSurtidor; j++)
                     {
                         string aux =
                             (i + 1).ToString() + "," +
@@ -172,47 +172,47 @@ namespace PumpController
          */
         public override void GrabarDespachos()
         {
-            for (int i = 1; i < Estacion.InstanciaEstacion.numeroDeSurtidores + 1; i++)
+            for (int i = 1; i < Estacion.InstanciaEstacion.NumeroDeSurtidores + 1; i++)
             {
                 Despacho despacho = conectorCEM.InfoSurtidor(i);
                 try
                 {
                     //List<InfoDespacho> infoDespachos = TablaDespachos.InstanciaDespachos.InfoDespachos;
 
-                    if (despacho.nroUltimaVenta == 0 || despacho.idUltimaVenta == null || despacho.idUltimaVenta == "" || despacho.idUltimaVenta.EndsWith("0000"))
+                    if (despacho.NroUltimaVenta == 0 || despacho.IdUltimaVenta == null || despacho.IdUltimaVenta == "" || despacho.IdUltimaVenta.EndsWith("0000"))
                     {
                         continue;
                     }
 
-                    DataTable tabla = ConectorSQLite.Dt_query("SELECT * FROM despachos WHERE id = '" + despacho.idUltimaVenta + "' AND surtidor = " + i);
+                    DataTable tabla = ConectorSQLite.Dt_query("SELECT * FROM despachos WHERE id = '" + despacho.IdUltimaVenta + "' AND surtidor = " + i);
 
                     /// Procesamiento de la ultima venta
                     if (tabla.Rows.Count == 0)
                     {
                         InfoDespacho infoDespacho = new InfoDespacho
                         {
-                            ID = despacho.idUltimaVenta,
+                            ID = despacho.IdUltimaVenta,
                             Surtidor = i,
                             Producto = "",
-                            Monto = despacho.montoUltimaVenta,
-                            Volumen = despacho.volumenUltimaVenta,
-                            PPU = despacho.ppuUltimaVenta,
-                            Facturado = Convert.ToInt32(despacho.ultimaVentaFacturada),
+                            Monto = despacho.MontoUltimaVenta,
+                            Volumen = despacho.VolumenUltimaVenta,
+                            PPU = despacho.PpuUltimaVenta,
+                            Facturado = Convert.ToInt32(despacho.UltimaVentaFacturada),
                             YPFRuta = 0,
                             Desc = ""
                         };
                         // Verificamos YPF en Ruta
-                        foreach (Producto p in Estacion.InstanciaEstacion.productos)
+                        foreach (Producto p in Estacion.InstanciaEstacion.Productos)
                         {
-                            if (p.precioUnitario == infoDespacho.PPU)
+                            if (p.PrecioUnitario == infoDespacho.PPU)
                             {
-                                if (p.numeroPorDespacho == null || p.numeroPorDespacho == "")
+                                if (p.NumeroPorDespacho == null || p.NumeroPorDespacho == "")
                                 {
-                                    p.numeroPorDespacho = despacho.productoUltimaVenta.ToString();
+                                    p.NumeroPorDespacho = despacho.ProductoUltimaVenta.ToString();
                                 }
-                                infoDespacho.Producto = p.numeroDeProducto;
-                                infoDespacho.Desc = p.descripcion;
-                                if (despacho.ultimaVentaFacturada)
+                                infoDespacho.Producto = p.NumeroDeProducto;
+                                infoDespacho.Desc = p.Descripcion;
+                                if (despacho.UltimaVentaFacturada)
                                 {
                                     infoDespacho.YPFRuta = 1;
                                 }
@@ -221,16 +221,16 @@ namespace PumpController
                         }
                         if (infoDespacho.Producto == "")
                         {
-                            foreach (Producto p in Estacion.InstanciaEstacion.productos)
+                            foreach (Producto p in Estacion.InstanciaEstacion.Productos)
                             {
-                                if (p.numeroPorDespacho != null && p.numeroPorDespacho != "" && p.numeroPorDespacho == despacho.productoUltimaVenta.ToString())
+                                if (p.NumeroPorDespacho != null && p.NumeroPorDespacho != "" && p.NumeroPorDespacho == despacho.ProductoUltimaVenta.ToString())
                                 {
-                                    infoDespacho.Producto = p.numeroPorDespacho;
-                                    infoDespacho.Desc = p.descripcion;
+                                    infoDespacho.Producto = p.NumeroPorDespacho;
+                                    infoDespacho.Desc = p.Descripcion;
                                 }
                                 else
                                 {
-                                    infoDespacho.Producto = despacho.productoUltimaVenta.ToString();
+                                    infoDespacho.Producto = despacho.ProductoUltimaVenta.ToString();
                                 }
                                 infoDespacho.YPFRuta = 1;
                             }
@@ -252,9 +252,9 @@ namespace PumpController
                         _ = ConectorSQLite.Query(string.Format("INSERT INTO despachos ({0}) VALUES ({1})", campos, rows));
                     }
 
-                    tabla = ConectorSQLite.Dt_query("SELECT * FROM despachos WHERE id = '" + despacho.idVentaAnterior + "' AND surtidor = " + i);
+                    tabla = ConectorSQLite.Dt_query("SELECT * FROM despachos WHERE id = '" + despacho.IdVentaAnterior + "' AND surtidor = " + i);
 
-                    if (despacho.idVentaAnterior == null || despacho.idVentaAnterior == "")
+                    if (despacho.IdVentaAnterior == null || despacho.IdVentaAnterior == "")
                     {
                         continue;
                     }
@@ -264,27 +264,27 @@ namespace PumpController
                     {
                         InfoDespacho infoDespacho = new InfoDespacho
                         {
-                            ID = despacho.idVentaAnterior,
+                            ID = despacho.IdVentaAnterior,
                             Surtidor = i,
                             Producto = "",
-                            Monto = despacho.montoVentaAnterior,
-                            Volumen = despacho.volumenVentaAnterios,
-                            PPU = despacho.ppuVentaAnterior,
+                            Monto = despacho.MontoVentaAnterior,
+                            Volumen = despacho.VolumenVentaAnterios,
+                            PPU = despacho.PpuVentaAnterior,
                             YPFRuta = 0,
                             Desc = ""
                         };
                         // Verificamos YPF en Ruta
-                        foreach (Producto p in Estacion.InstanciaEstacion.productos)
+                        foreach (Producto p in Estacion.InstanciaEstacion.Productos)
                         {
-                            if (p.precioUnitario == infoDespacho.PPU)
+                            if (p.PrecioUnitario == infoDespacho.PPU)
                             {
-                                if (p.numeroPorDespacho == null || p.numeroPorDespacho == "")
+                                if (p.NumeroPorDespacho == null || p.NumeroPorDespacho == "")
                                 {
-                                    p.numeroPorDespacho = despacho.productoVentaAnterior.ToString();
+                                    p.NumeroPorDespacho = despacho.ProductoVentaAnterior.ToString();
                                 }
-                                infoDespacho.Producto = p.numeroDeProducto;
-                                infoDespacho.Desc = p.descripcion;
-                                if (despacho.ventaAnteriorFacturada)
+                                infoDespacho.Producto = p.NumeroDeProducto;
+                                infoDespacho.Desc = p.Descripcion;
+                                if (despacho.VentaAnteriorFacturada)
                                 {
                                     infoDespacho.YPFRuta = 1;
                                 }
@@ -293,16 +293,16 @@ namespace PumpController
                         }
                         if (infoDespacho.Producto == "")
                         {
-                            foreach (Producto p in Estacion.InstanciaEstacion.productos)
+                            foreach (Producto p in Estacion.InstanciaEstacion.Productos)
                             {
-                                if (p.numeroPorDespacho != null && p.numeroPorDespacho != "" && p.numeroPorDespacho == despacho.productoVentaAnterior.ToString())
+                                if (p.NumeroPorDespacho != null && p.NumeroPorDespacho != "" && p.NumeroPorDespacho == despacho.ProductoVentaAnterior.ToString())
                                 {
-                                    infoDespacho.Producto = p.numeroPorDespacho;
-                                    infoDespacho.Desc = p.descripcion;
+                                    infoDespacho.Producto = p.NumeroPorDespacho;
+                                    infoDespacho.Desc = p.Descripcion;
                                 }
                                 else
                                 {
-                                    infoDespacho.Producto = despacho.productoVentaAnterior.ToString();
+                                    infoDespacho.Producto = despacho.ProductoVentaAnterior.ToString();
                                 }
                                 infoDespacho.YPFRuta = 1;
                             }

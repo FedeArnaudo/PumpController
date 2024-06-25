@@ -45,79 +45,79 @@ namespace PumpController
                     throw new Exception("No se recibió mensaje de confirmación al solicitar info de la estación");
                 }
 
-                estacionTemp.numeroDeSurtidores = respuesta[surtidores];
+                estacionTemp.NumeroDeSurtidores = respuesta[surtidores];
                 _ = respuesta[islas];
 
-                estacionTemp.numeroDeTanques = respuesta[tanques];
+                estacionTemp.NumeroDeTanques = respuesta[tanques];
 
-                estacionTemp.numeroDeProductos = respuesta[productos];
+                estacionTemp.NumeroDeProductos = respuesta[productos];
 
                 int posicion = productos + 1;
                 List<Producto> tempProductos = new List<Producto>();
-                for (int i = 0; i < estacionTemp.numeroDeProductos; i++)
+                for (int i = 0; i < estacionTemp.NumeroDeProductos; i++)
                 {
                     Producto producto = new Producto
                     {
-                        numeroDeProducto = LeerCampoVariable(respuesta, ref posicion),
-                        precioUnitario = LeerCampoVariable(respuesta, ref posicion)
+                        NumeroDeProducto = LeerCampoVariable(respuesta, ref posicion),
+                        PrecioUnitario = LeerCampoVariable(respuesta, ref posicion)
                     };
                     DescartarCampoVariable(respuesta, ref posicion);
 
                     foreach (string[] s in combus)
                     {
-                        if (s[1].Equals(producto.precioUnitario))
+                        if (s[1].Equals(producto.PrecioUnitario))
                         {
-                            producto.descripcion = s[0];
+                            producto.Descripcion = s[0];
                             break;
                         }
                     }
                     tempProductos.Add(producto);
                 }
-                estacionTemp.productos = tempProductos;
+                estacionTemp.Productos = tempProductos;
 
                 List<Surtidor> tempSurtidores = new List<Surtidor>();
                 List<List<Surtidor>> tempNivelesDePrecio = new List<List<Surtidor>>();
                 int tempNumeroDeMangueras = 0;
-                for (int i = 0; i < estacionTemp.numeroDeSurtidores; i++)
+                for (int i = 0; i < estacionTemp.NumeroDeSurtidores; i++)
                 {
                     Surtidor surtidor = new Surtidor
                     {
-                        nivelDeSurtidor = respuesta[posicion]
+                        NivelDeSurtidor = respuesta[posicion]
                     };
                     posicion++;
-                    surtidor.tipoDeSurtidor = respuesta[posicion] + 1;
+                    surtidor.TipoDeSurtidor = respuesta[posicion] + 1;
                     tempNumeroDeMangueras += respuesta[posicion] + 1;
                     posicion++;
 
-                    for (int j = 0; j < surtidor.tipoDeSurtidor; j++)
+                    for (int j = 0; j < surtidor.TipoDeSurtidor; j++)
                     {
                         Manguera manguera = new Manguera
                         {
-                            numeroDeManquera = j + 1
+                            NumeroDeManquera = j + 1
                         };
                         string productoH = "0" + respuesta[posicion];
                         posicion++;
                         foreach (Producto producto in tempProductos)
                         {
-                            if (producto.numeroDeProducto.Equals(productoH))
+                            if (producto.NumeroDeProducto.Equals(productoH))
                             {
-                                manguera.producto = producto;
+                                manguera.Producto = producto;
                                 break;
                             }
                         }
-                        surtidor.mangueras.Add(manguera);
+                        surtidor.Mangueras.Add(manguera);
                     }
-                    surtidor.numeroDeSurtidor = i + 1;
+                    surtidor.NumeroDeSurtidor = i + 1;
                     tempSurtidores.Add(surtidor);
                 }
                 tempNivelesDePrecio.Add(tempSurtidores);
-                estacionTemp.numeroDeMangueras = tempNumeroDeMangueras;
-                estacionTemp.surtidores = tempSurtidores;
-                estacionTemp.nivelesDePrecio = tempNivelesDePrecio;
+                estacionTemp.NumeroDeMangueras = tempNumeroDeMangueras;
+                estacionTemp.Surtidores = tempSurtidores;
+                estacionTemp.NivelesDePrecio = tempNivelesDePrecio;
                 //estacionTemp.nivelesDePrecio.Add(tempSurtidores);
 
                 List<Tanque> tempTanques = new List<Tanque>();
-                for (int i = 0; i < estacionTemp.numeroDeTanques; i++)
+                for (int i = 0; i < estacionTemp.NumeroDeTanques; i++)
                 {
                     Tanque tanque = new Tanque
                     {
@@ -127,7 +127,7 @@ namespace PumpController
                     posicion++;
                     tempTanques.Add(tanque);
                 }
-                estacionTemp.tanques = tempTanques;
+                estacionTemp.Tanques = tempTanques;
             }
             catch (Exception e)
             {
@@ -155,7 +155,7 @@ namespace PumpController
 
                 for (int i = 0; i < cantidadDeTanques; i++)
                 {
-                    foreach (Tanque tanque in Estacion.InstanciaEstacion.tanques)
+                    foreach (Tanque tanque in Estacion.InstanciaEstacion.Tanques)
                     {
                         if (tanque.NumeroDeTanque == (i + 1))
                         {
@@ -172,7 +172,7 @@ namespace PumpController
             {
                 throw new Exception("Error al obtener informacion del tanque" + e.Message);
             }
-            return Estacion.InstanciaEstacion.tanques;
+            return Estacion.InstanciaEstacion.Tanques;
         }
         public Despacho InfoSurtidor(int numeroDeSurtidor)
         {
@@ -204,29 +204,29 @@ namespace PumpController
                 switch (statusUltimaVenta)
                 {
                     case 0x01:
-                        despachoTemp.statusUltimaVenta = Despacho.ESTADO_SURTIDOR.DISPONIBLE;
+                        despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.DISPONIBLE;
                         break;
                     case 0x02:
-                        despachoTemp.statusUltimaVenta = Despacho.ESTADO_SURTIDOR.EN_SOLICITUD;
+                        despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.EN_SOLICITUD;
                         break;
                     case 0x03:
-                        despachoTemp.statusUltimaVenta = Despacho.ESTADO_SURTIDOR.DESPACHANDO;
+                        despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.DESPACHANDO;
                         despachando = true;
                         break;
                     case 0x04:
-                        despachoTemp.statusUltimaVenta = Despacho.ESTADO_SURTIDOR.AUTORIZADO;
+                        despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.AUTORIZADO;
                         break;
                     case 0x05:
-                        despachoTemp.statusUltimaVenta = Despacho.ESTADO_SURTIDOR.VENTA_FINALIZADA_IMPAGA;
+                        despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.VENTA_FINALIZADA_IMPAGA;
                         break;
                     case 0x08:
-                        despachoTemp.statusUltimaVenta = Despacho.ESTADO_SURTIDOR.DEFECTUOSO;
+                        despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.DEFECTUOSO;
                         break;
                     case 0x09:
-                        despachoTemp.statusUltimaVenta = Despacho.ESTADO_SURTIDOR.ANULADO;
+                        despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.ANULADO;
                         break;
                     case 0x0A:
-                        despachoTemp.statusUltimaVenta = Despacho.ESTADO_SURTIDOR.DETENIDO;
+                        despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.DETENIDO;
                         detenido = true;
                         break;
                     default:
@@ -237,25 +237,25 @@ namespace PumpController
 
                 if (despachando || detenido)
                 {
-                    despachoTemp.nroUltimaVenta = 0;
-                    despachoTemp.productoUltimaVenta = 0;
-                    despachoTemp.montoUltimaVenta = "";
-                    despachoTemp.volumenUltimaVenta = "";
-                    despachoTemp.ppuUltimaVenta = "";
-                    despachoTemp.ultimaVentaFacturada = false;
-                    despachoTemp.idUltimaVenta = null;
+                    despachoTemp.NroUltimaVenta = 0;
+                    despachoTemp.ProductoUltimaVenta = 0;
+                    despachoTemp.MontoUltimaVenta = "";
+                    despachoTemp.VolumenUltimaVenta = "";
+                    despachoTemp.PpuUltimaVenta = "";
+                    despachoTemp.UltimaVentaFacturada = false;
+                    despachoTemp.IdUltimaVenta = null;
                     posicion = status + 1;
                 }
                 else
                 {
-                    despachoTemp.nroUltimaVenta = respuesta[nro_venta];
-                    despachoTemp.productoUltimaVenta = respuesta[codigo_producto];
-                    despachoTemp.montoUltimaVenta = LeerCampoVariable(respuesta, ref posicion);
-                    despachoTemp.volumenUltimaVenta = LeerCampoVariable(respuesta, ref posicion);
-                    despachoTemp.ppuUltimaVenta = LeerCampoVariable(respuesta, ref posicion);
-                    despachoTemp.ultimaVentaFacturada = Convert.ToBoolean(respuesta[posicion]);
+                    despachoTemp.NroUltimaVenta = respuesta[nro_venta];
+                    despachoTemp.ProductoUltimaVenta = respuesta[codigo_producto];
+                    despachoTemp.MontoUltimaVenta = LeerCampoVariable(respuesta, ref posicion);
+                    despachoTemp.VolumenUltimaVenta = LeerCampoVariable(respuesta, ref posicion);
+                    despachoTemp.PpuUltimaVenta = LeerCampoVariable(respuesta, ref posicion);
+                    despachoTemp.UltimaVentaFacturada = Convert.ToBoolean(respuesta[posicion]);
                     posicion++;
-                    despachoTemp.idUltimaVenta = LeerCampoVariable(respuesta, ref posicion);
+                    despachoTemp.IdUltimaVenta = LeerCampoVariable(respuesta, ref posicion);
                 }
 
                 //Proceso venta anterior
@@ -263,29 +263,29 @@ namespace PumpController
                 switch (statusVentaAnterior)
                 {
                     case 0x01:
-                        despachoTemp.statusVentaAnterior = Despacho.ESTADO_SURTIDOR.DISPONIBLE;
+                        despachoTemp.StatusVentaAnterior = Despacho.ESTADO_SURTIDOR.DISPONIBLE;
                         break;
                     case 0x05:
-                        despachoTemp.statusVentaAnterior = Despacho.ESTADO_SURTIDOR.VENTA_FINALIZADA_IMPAGA;
+                        despachoTemp.StatusVentaAnterior = Despacho.ESTADO_SURTIDOR.VENTA_FINALIZADA_IMPAGA;
                         break;
                     default:
                         break;
                 }
                 posicion++;
 
-                despachoTemp.nroVentaAnterior = respuesta[posicion];
+                despachoTemp.NroVentaAnterior = respuesta[posicion];
                 posicion++;
 
-                despachoTemp.productoVentaAnterior = respuesta[posicion];
+                despachoTemp.ProductoVentaAnterior = respuesta[posicion];
                 posicion++;
 
-                despachoTemp.montoVentaAnterior = LeerCampoVariable(respuesta, ref posicion);
-                despachoTemp.volumenVentaAnterios = LeerCampoVariable(respuesta, ref posicion);
-                despachoTemp.ppuVentaAnterior = LeerCampoVariable(respuesta, ref posicion);
-                despachoTemp.ventaAnteriorFacturada = Convert.ToBoolean(respuesta[posicion]);
+                despachoTemp.MontoVentaAnterior = LeerCampoVariable(respuesta, ref posicion);
+                despachoTemp.VolumenVentaAnterios = LeerCampoVariable(respuesta, ref posicion);
+                despachoTemp.PpuVentaAnterior = LeerCampoVariable(respuesta, ref posicion);
+                despachoTemp.VentaAnteriorFacturada = Convert.ToBoolean(respuesta[posicion]);
                 posicion++;
 
-                despachoTemp.idVentaAnterior = despachando || detenido ? "" : LeerCampoVariable(respuesta, ref posicion);
+                despachoTemp.IdVentaAnterior = despachando || detenido ? "" : LeerCampoVariable(respuesta, ref posicion);
                 //tablaDespachos.despachos.Add(tempDespacho);
             }
             catch (Exception e)
@@ -341,7 +341,7 @@ namespace PumpController
                     for (int j = 0; j < cierreDeTurno.NivelesDePrecios; j++)
                     {
                         List<TotalPorProducto> totalesPorProductoTemp = new List<TotalPorProducto>();
-                        List<Producto> productosTemp = infoConfigEstacion.productos;
+                        List<Producto> productosTemp = infoConfigEstacion.Productos;
                         foreach (Producto producto in productosTemp)
                         {
                             TotalPorProducto totalPorProductoTemp = new TotalPorProducto
@@ -349,7 +349,7 @@ namespace PumpController
                                 Periodo = i + 1,
                                 Nivel = j + 1,
 
-                                NumeroDeProducto = producto.numeroDeProducto,
+                                NumeroDeProducto = producto.NumeroDeProducto,
                                 TotalMonto = LeerCampoVariable(respuesta, ref posicion),
                                 TotalVolumen = LeerCampoVariable(respuesta, ref posicion),
                                 PrecioUnitario = LeerCampoVariable(respuesta, ref posicion)
@@ -362,7 +362,7 @@ namespace PumpController
                     cierreDeTurno.TotalesPorProductosPorNivelesPorPeriodo.Add(totalesPorProductoPorNivelesTemp);
                 }
 
-                int numeroDeMangueras = infoConfigEstacion.numeroDeMangueras + 1;
+                int numeroDeMangueras = infoConfigEstacion.NumeroDeMangueras + 1;
                 for (int i = 1; i < numeroDeMangueras; i++)
                 {
                     TotalPorManguera totalPorMangueraTemp = new TotalPorManguera()
@@ -378,7 +378,7 @@ namespace PumpController
                     cierreDeTurno.TotalPorMangueras.Add(totalPorMangueraTemp);
                 }
 
-                int numeroDeTanques = infoConfigEstacion.numeroDeTanques + 1;
+                int numeroDeTanques = infoConfigEstacion.NumeroDeTanques + 1;
                 for (int i = 1; i < numeroDeTanques; i++)
                 {
                     TotalPorTanque totalPorTanqueTemp = new TotalPorTanque
@@ -391,7 +391,7 @@ namespace PumpController
                     };
                 }
 
-                int cantidadDeProductos = infoConfigEstacion.numeroDeProductos + 1;
+                int cantidadDeProductos = infoConfigEstacion.NumeroDeProductos + 1;
                 for (int i = 1; i < cantidadDeProductos; i++)
                 {
                     ProductoEnTanque productoEnTanqueTemp = new ProductoEnTanque
