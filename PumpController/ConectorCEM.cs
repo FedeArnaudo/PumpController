@@ -14,7 +14,6 @@ namespace PumpController
         private readonly string nombreDelPipe = "CEM44POSPIPE";
         private readonly string ipControlador;
         private readonly int protocolo;
-
         public ConectorCEM()
         {
             ipControlador = Configuracion.LeerConfiguracion().IpControlador;
@@ -142,7 +141,6 @@ namespace PumpController
 
             ///Uso este comando para leer respuestas guardadas
             ///byte[] respuesta = LeerArchivo("infoTanques");
-            
             byte[] respuesta = EnviarComando(new byte[] { mensaje[0] });
             try
             {
