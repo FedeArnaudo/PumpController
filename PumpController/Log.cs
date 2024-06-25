@@ -90,7 +90,7 @@ namespace PumpController
                         {
                             using (StreamWriter outputFile = new StreamWriter(Path.Combine(path, logFile), true))
                             {
-                                outputFile.WriteLine(DateTime.Now.ToString("\nhh:mm:ss") + "  ERROR:   " + message);
+                                outputFile.WriteLine(DateTime.Now.ToString("hh:mm:ss") + "  ERROR:   " + message);
                             }
                         }
                         break;

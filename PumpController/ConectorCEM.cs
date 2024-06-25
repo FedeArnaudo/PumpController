@@ -130,7 +130,7 @@ namespace PumpController
             }
             catch (Exception e)
             {
-                throw new Exception($"Error al obtener informacion de la estacion. Excepcion: {e.Message}");
+                throw new Exception($"Error al obtener informacion de la estacion. \nExcepcion: {e.Message}");
             }
             return estacionTemp;
         }
@@ -168,7 +168,7 @@ namespace PumpController
             }
             catch (Exception e)
             {
-                throw new Exception("Error al obtener informacion del tanque" + e.Message);
+                throw new Exception("Error al obtener informacion del tanque. \nExcepción: " + e.Message);
             }
             return Estacion.InstanciaEstacion.Tanques;
         }
@@ -288,7 +288,7 @@ namespace PumpController
             }
             catch (Exception e)
             {
-                throw new Exception("Error al obtener informacion del despacho" + e.Message);
+                throw new Exception("Error al obtener informacion del despacho.\nExcepcion: " + e.Message);
             }
             return despachoTemp;
         }
@@ -405,7 +405,7 @@ namespace PumpController
             }
             catch (Exception e)
             {
-                throw new Exception($"Error procesando el cierre de turno. Excepcion: {e.Message}");
+                throw new Exception($"Error procesando el cierre de turno. \nExcepcion: {e.Message}");
             }
             return cierreDeTurno;
         }

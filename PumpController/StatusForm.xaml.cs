@@ -62,8 +62,8 @@ namespace PumpController
         }
         private void btnVerDespacho_Click(object sender, RoutedEventArgs e)
         {
-            //VerDespacho verDespacho = new VerDespacho();
-            //verDespacho.Show();
+            VerDespacho verDespacho = new VerDespacho();
+            verDespacho.Show();
         }
         private void btnCambiarConfig_Click(object sender, RoutedEventArgs e)
         {
@@ -72,8 +72,8 @@ namespace PumpController
         }
         private void btnVerConfigEstacion_Click(object sender, RoutedEventArgs e)
         {
-            //VerSurtidores verSurtidores = new VerSurtidores();
-            //verSurtidores.Show();
+            VerSurtidores verSurtidores = new VerSurtidores();
+            verSurtidores.Show();
         }
         private void SetupNotifyIcon()
         {
@@ -86,7 +86,7 @@ namespace PumpController
 
             notifyIcon.DoubleClick += NotifyIcon_DoubleClick;
 
-            System.Windows.Forms.ContextMenu contextMenu = new System.Windows.Forms.ContextMenu();
+            ContextMenu contextMenu = new ContextMenu();
             _ = contextMenu.MenuItems.Add("Restaurar", (s, e) => RestoreFromTray());
             _ = contextMenu.MenuItems.Add("Salir", (s, e) => ExitApplication());
 

@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace PumpController
 {
     internal abstract class Controlador
     {
-        public Controlador() { }
+        public Controlador()
+        {
+            
+        }
 
         // Instancia de Singleton
         private static Controlador instancia = null;
@@ -19,6 +23,7 @@ namespace PumpController
         private static readonly int loopDelaySeconds = 2;
 
         public static bool endWork = false;
+        private static readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         public abstract void GrabarConfigEstacion();
 
@@ -56,15 +61,16 @@ namespace PumpController
                 }
                 if (procesoPrincipal == null || !procesoPrincipal.IsAlive)
                 {
-                    procesoPrincipal = new Thread(new ThreadStart(Run));
-                    procesoPrincipal.Start();
+                    _ = Task.Run(() => Run(cancellationTokenSource.Token));
+                    //procesoPrincipal = new Thread(new ThreadStart(Run));
+                    //procesoPrincipal.Start();
                 }
             }
             return true;
         }
-        private static void Run()
+        private static void Run(CancellationToken token)
         {
-            while (working.WaitOne(1))
+            while (!token.IsCancellationRequested)
             {
                 try
                 {
@@ -74,8 +80,14 @@ namespace PumpController
                     while (!ConectorSQLite.ComprobarCierre())
                     {
                         instancia.GrabarDespachos();
+
                         /// Espera para procesar nuevamente
                         Thread.Sleep(loopDelaySeconds * 1000);
+
+                        if (token.IsCancellationRequested)
+                        {
+                            break;
+                        }
                     }
                     /// Espera para procesar nuevamente
                     Thread.Sleep(loopDelaySeconds * 1000);
@@ -85,6 +97,10 @@ namespace PumpController
                     _ = Log.Instance.WriteLog("Error en el loop del controlador.\nExcepción: " + e.Message, Log.LogType.t_error);
                 }
             }
+        }
+        public static void Stop()
+        {
+            cancellationTokenSource.Cancel();
         }
     }
 }
