@@ -82,7 +82,7 @@
                 <RowDefinition Height="145"></RowDefinition>
                 <RowDefinition Height="150"></RowDefinition>
                 <RowDefinition Height="60"></RowDefinition>
-                <RowDefinition></RowDefinition>
+                <RowDefinition Height="30"></RowDefinition>
                 <RowDefinition Height="20"></RowDefinition>
             </Grid.RowDefinitions>
             <!--#endregion-->

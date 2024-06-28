@@ -149,11 +149,11 @@
                 <TextBlock Text="Configurar" Foreground="White" FontSize="15"></TextBlock>
             </Button>
 
-            <Button Grid.Row="2" Grid.Column="2" Width="25" Height="25" Background="#007ED6" BorderBrush="#007ED6"
+            <Button Grid.Row="2" Grid.Column="2" Width="20" Height="20" Background="#007ED6" BorderBrush="#007ED6"
                     HorizontalAlignment="Right" VerticalAlignment="Center"
                     Margin="0, 0, 4, 0" Name="btnRutaPN" Click="btnRutaPN_Click"
-                    Style="{DynamicResource ButtonStyle}" >
-                <TextBlock Text=". . ." Foreground="White" FontSize="15"></TextBlock>
+                    Style="{DynamicResource ButtonStyle}">
+                <TextBlock Text=". . ." Foreground="White" FontSize="10"></TextBlock>
             </Button>
             <!--#endregion-->
         </Grid>

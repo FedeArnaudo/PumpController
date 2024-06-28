@@ -13,7 +13,7 @@ namespace PumpController
         public VerSurtidores()
         {
             InitializeComponent();
-            Icon = new BitmapImage(new Uri("pack://application:,,,/PumpController;component/LogoSiges24x24.ico"));
+            Icon = new BitmapImage(new Uri("pack://application:,,,/PumpController;component/LogoSiges.ico"));
             List<ConfigEstacion> infoSurtidors = MostrarConfiguracion();
             DataGridDatos.ItemsSource = infoSurtidors;
         }
@@ -25,27 +25,34 @@ namespace PumpController
         {
             Estacion estacion = Estacion.InstanciaEstacion;
             List<ConfigEstacion> infoSurtidores = new List<ConfigEstacion>();
-            List<Surtidor> tempSurtidores = estacion.NivelesDePrecio[0];
-            foreach (Surtidor surtidor in tempSurtidores)
+            try
             {
-                List<Manguera> tempManguera = surtidor.Mangueras;
-                foreach (Manguera manguera in tempManguera)
+                List<Surtidor> tempSurtidores = estacion.NivelesDePrecio[0];
+                foreach (Surtidor surtidor in tempSurtidores)
                 {
-                    string letra = "A";
-                    if (manguera.NumeroDeManquera == 2)
+                    List<Manguera> tempManguera = surtidor.Mangueras;
+                    foreach (Manguera manguera in tempManguera)
                     {
-                        letra = "B";
+                        string letra = "A";
+                        if (manguera.NumeroDeManquera == 2)
+                        {
+                            letra = "B";
+                        }
+                        else if (manguera.NumeroDeManquera == 3)
+                        {
+                            letra = "C";
+                        }
+                        else if (manguera.NumeroDeManquera == 4)
+                        {
+                            letra = "D";
+                        }
+                        infoSurtidores.Add(new ConfigEstacion(surtidor.NumeroDeSurtidor.ToString(), letra, manguera.Producto.NumeroDeProducto, manguera.Producto.PrecioUnitario, manguera.Producto.Descripcion));
                     }
-                    else if (manguera.NumeroDeManquera == 3)
-                    {
-                        letra = "C";
-                    }
-                    else if (manguera.NumeroDeManquera == 4)
-                    {
-                        letra = "D";
-                    }
-                    infoSurtidores.Add(new ConfigEstacion(surtidor.NumeroDeSurtidor.ToString(), letra, manguera.Producto.NumeroDeProducto, manguera.Producto.PrecioUnitario, manguera.Producto.Descripcion));
                 }
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+
             }
             return infoSurtidores;
         }

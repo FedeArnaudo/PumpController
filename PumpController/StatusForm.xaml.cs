@@ -124,5 +124,13 @@ namespace PumpController
             notifyIcon.Dispose();
             base.OnClosed(e);
         }
+
+        private void btnCerrar_Click(object sender, RoutedEventArgs e)
+        {
+            Controlador.Stop();
+            notifyIcon.Dispose();
+            base.OnClosed(e);
+            Close();
+        }
     }
 }

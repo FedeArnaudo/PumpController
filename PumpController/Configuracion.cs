@@ -3,7 +3,7 @@ using System.IO;
 
 namespace PumpController
 {
-    class Configuracion
+    internal class Configuracion
     {
         public class InfoConfig
         {
