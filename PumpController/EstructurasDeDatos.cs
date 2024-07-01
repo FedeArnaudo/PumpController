@@ -135,6 +135,7 @@ namespace PumpController
         public InfoDespacho() { }
         public string ID { get; set; }
         public int Surtidor { get; set; }
+        public string Manguera { get; set; }
         public string Producto { get; set; }
         public string Monto { get; set; }
         public string Volumen { get; set; }

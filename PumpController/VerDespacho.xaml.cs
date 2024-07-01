@@ -14,7 +14,7 @@ namespace PumpController
         {
             InitializeComponent();
             Icon = new BitmapImage(new Uri("pack://application:,,,/PumpController;component/LogoSiges.ico"));
-            DataTable result = ConectorSQLite.Dt_query("SELECT * FROM despachos ORDER BY fecha DESC");
+            DataTable result = ConectorSQLite.Dt_query("SELECT * FROM Despachos ORDER BY fecha DESC");
             DataGridDatos.ItemsSource = result.AsDataView();
         }
         private void btnCerrar_Click(object sender, RoutedEventArgs e)

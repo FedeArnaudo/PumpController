@@ -35,10 +35,10 @@ namespace PumpController
                 //Traigo las descripciones de los productos de la tabla combus
                 List<string[]> combus = TraerDescripciones();
 
-                byte[] respuesta = EnviarComando(mensaje);
+                ///byte[] respuesta = EnviarComando(mensaje);
 
                 ///Uso este comando para leer respuestas guardadas
-                ///byte[] respuesta = LeerArchivo("ConfigEstacion");
+                byte[] respuesta = LeerArchivo("ConfigEstacion");
 
                 if (respuesta[confirmacion] != 0x0)
                 {
@@ -141,9 +141,9 @@ namespace PumpController
             int confirmacion = 0;
 
             ///Uso este comando para leer respuestas guardadas
-            ///byte[] respuesta = LeerArchivo("infoTanques");
+            byte[] respuesta = LeerArchivo("infoTanques");
             
-            byte[] respuesta = EnviarComando(new byte[] { mensaje[0] });
+            ///byte[] respuesta = EnviarComando(new byte[] { mensaje[0] });
             try
             {
                 if (respuesta[confirmacion] != 0x0)
@@ -185,9 +185,9 @@ namespace PumpController
             Despacho despachoTemp = new Despacho();
 
             ///Uso este comando para leer respuestas guardadas
-            ///byte[] respuesta = LeerArchivo("despacho-" + numeroDeSurtidor);
+            byte[] respuesta = LeerArchivo("despacho-" + numeroDeSurtidor);
 
-            byte[] respuesta = EnviarComando(new byte[] { (byte)(mensaje[0] + Convert.ToByte(numeroDeSurtidor)) });
+            ///byte[] respuesta = EnviarComando(new byte[] { (byte)(mensaje[0] + Convert.ToByte(numeroDeSurtidor)) });
             try
             {
                 if (respuesta[confirmacion] != 0x0)

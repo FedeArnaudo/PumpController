@@ -193,6 +193,7 @@ namespace PumpController
                         {
                             ID = despacho.IdUltimaVenta,
                             Surtidor = i,
+                            Manguera = "",
                             Producto = "",
                             Monto = despacho.MontoUltimaVenta,
                             Volumen = despacho.VolumenUltimaVenta,
@@ -235,11 +236,40 @@ namespace PumpController
                                 infoDespacho.YPFRuta = 1;
                             }
                         }
-                        //TablaDespachos.InstanciaDespachos.InfoDespachos.Add(infoDespacho);
+                        if (infoDespacho.Desc != "")
+                        {
+                            List<Manguera> tempManguera = Estacion.InstanciaEstacion.Surtidores[i - 1].Mangueras;
+                            foreach (Manguera manguera in tempManguera)
+                            {
+                                if (infoDespacho.Desc.Equals(manguera.Producto.Descripcion))
+                                {
+                                    string letra = null;
+                                    switch (manguera.NumeroDeManquera)
+                                    {
+                                        case 1:
+                                            letra = "A";
+                                            break;
+                                        case 2:
+                                            letra = "B";
+                                            break;
+                                        case 3:
+                                            letra = "C";
+                                            break;
+                                        case 4:
+                                            letra = "D";
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    infoDespacho.Manguera = letra;
+                                }
+                            }
+                        }
 
                         /// Agregar a Base de Datos
-                        string campos = "id,surtidor,producto,monto,volumen,PPU,facturado,YPFruta,DesProd";
-                        string rows = string.Format("'{0}',{1},'{2}','{3}','{4}','{5}',{6},{7},'{8}'",
+                        bool despacho_pedido = false;
+                        string campos = "id,surtidor,producto,monto,volumen,PPU,facturado,YPFruta,descripcion,manguera,despacho_pedido";
+                        string rows = string.Format("'{0}',{1},'{2}','{3}','{4}','{5}',{6},{7},'{8}','{9}',{10}",
                             infoDespacho.ID,
                             infoDespacho.Surtidor,
                             infoDespacho.Producto,
@@ -248,11 +278,13 @@ namespace PumpController
                             infoDespacho.PPU,
                             infoDespacho.Facturado,
                             infoDespacho.YPFRuta,
-                            infoDespacho.Desc);
-                        _ = ConectorSQLite.Query(string.Format("INSERT INTO despachos ({0}) VALUES ({1})", campos, rows));
+                            infoDespacho.Desc,
+                            infoDespacho.Manguera,
+                            despacho_pedido);
+                        _ = ConectorSQLite.Query(string.Format("INSERT INTO Despachos ({0}) VALUES ({1})", campos, rows));
                     }
 
-                    tabla = ConectorSQLite.Dt_query("SELECT * FROM despachos WHERE id = '" + despacho.IdVentaAnterior + "' AND surtidor = " + i);
+                    tabla = ConectorSQLite.Dt_query("SELECT * FROM Despachos WHERE id = '" + despacho.IdVentaAnterior + "' AND surtidor = " + i);
 
                     if (despacho.IdVentaAnterior == null || despacho.IdVentaAnterior == "")
                     {
@@ -307,10 +339,39 @@ namespace PumpController
                                 infoDespacho.YPFRuta = 1;
                             }
                         }
-                        //TablaDespachos.InstanciaDespachos.InfoDespachos.Add(infoDespacho);
+                        if (infoDespacho.Desc != "")
+                        {
+                            List<Manguera> tempManguera = Estacion.InstanciaEstacion.Surtidores[i - 1].Mangueras;
+                            foreach (Manguera manguera in tempManguera)
+                            {
+                                if (infoDespacho.Desc.Equals(manguera.Producto.Descripcion))
+                                {
+                                    string letra = null;
+                                    switch (manguera.NumeroDeManquera)
+                                    {
+                                        case 1:
+                                            letra = "A";
+                                            break;
+                                        case 2:
+                                            letra = "B";
+                                            break;
+                                        case 3:
+                                            letra = "C";
+                                            break;
+                                        case 4:
+                                            letra = "D";
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    infoDespacho.Manguera = letra;
+                                }
+                            }
+                        }
                         /// Agregar a Base de Datos
-                        string campos = "id,surtidor,producto,monto,volumen,PPU,facturado,YPFruta,DesProd";
-                        string rows = string.Format("'{0}',{1},'{2}','{3}','{4}','{5}',{6},{7},'{8}'",
+                        bool despacho_pedido = false;
+                        string campos = "id,surtidor,producto,monto,volumen,PPU,facturado,YPFruta,descripcion,manguera,despacho_pedido";
+                        string rows = string.Format("'{0}',{1},'{2}','{3}','{4}','{5}',{6},{7},'{8}','{9}',{10}",
                             infoDespacho.ID,
                             infoDespacho.Surtidor,
                             infoDespacho.Producto,
@@ -319,14 +380,16 @@ namespace PumpController
                             infoDespacho.PPU,
                             infoDespacho.Facturado,
                             infoDespacho.YPFRuta,
-                            infoDespacho.Desc);
-                        _ = ConectorSQLite.Query(string.Format("INSERT INTO despachos ({0}) VALUES ({1})", campos, rows));
+                            infoDespacho.Desc,
+                            infoDespacho.Manguera,
+                            despacho_pedido);
+                        _ = ConectorSQLite.Query(string.Format("INSERT INTO Despachos ({0}) VALUES ({1})", campos, rows));
                     }
                     // Cuando se hagan los cierres esto se debe eliminar
-                    DataTable cantidadDeFilas = ConectorSQLite.Dt_query("SELECT * FROM despachos");
+                    DataTable cantidadDeFilas = ConectorSQLite.Dt_query("SELECT * FROM Despachos");
                     if (cantidadDeFilas.Rows.Count >= 50)
                     {
-                        _ = ConectorSQLite.Query(@"DELETE FROM despachos WHERE id IN(SELECT id FROM despachos ORDER BY fecha LIMIT 40)");
+                        _ = ConectorSQLite.Query(@"DELETE FROM Despachos WHERE id IN(SELECT id FROM Despachos ORDER BY fecha LIMIT 40)");
                     }
                 }
                 catch (Exception e)

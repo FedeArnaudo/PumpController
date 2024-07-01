@@ -6,7 +6,7 @@
         Icon="LogoSiges.ico"
         xmlns:local="clr-namespace:PumpController"
         mc:Ignorable="d"
-        Title="Info Despachos" Height="450" Width="905">
+        Title="Info Despachos" Height="450" Width="970">
     <Window.Resources>
         <!--#region ButtonStyle-->
         <Style x:Key="FocusVisual">
@@ -107,6 +107,8 @@
                                         Binding="{Binding id}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Surtidor" Width="70"
                                         Binding="{Binding surtidor}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Manguera" Width="70"
+                                        Binding="{Binding manguera}"></DataGridTextColumn>
                     <DataGridTextColumn Header="N Producto" Width="85"
                                         Binding="{Binding producto}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Monto" Width="80"
@@ -122,7 +124,7 @@
                     <DataGridTextColumn Header="YPF Ruta" Width="75"
                                         Binding="{Binding YPFruta}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Descripcion" Width="90"
-                                        Binding="{Binding DesProd}"></DataGridTextColumn>
+                                        Binding="{Binding descripcion}"></DataGridTextColumn>
                 </DataGrid.Columns>
                 <DataGrid.RowStyle>
                     <Style TargetType="DataGridRow">
