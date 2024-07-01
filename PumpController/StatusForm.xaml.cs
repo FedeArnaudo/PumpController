@@ -75,11 +75,16 @@ namespace PumpController
             VerSurtidores verSurtidores = new VerSurtidores();
             verSurtidores.Show();
         }
+        private void btnVerTanques_Click(object sender, RoutedEventArgs e)
+        {
+            VerTanques verTanques = new VerTanques();
+            verTanques.Show();
+        }
         private void SetupNotifyIcon()
         {
             notifyIcon = new NotifyIcon
             {
-                Icon = new Icon("Surtidor_2.ico"),
+                Icon = new Icon("LogoSurtidor.ico"),
                 Visible = true,
                 Text = "Controlador De Surtidores"
             };
