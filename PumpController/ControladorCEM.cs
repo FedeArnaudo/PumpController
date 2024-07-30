@@ -102,7 +102,7 @@ namespace PumpController
         }
         public void GrabarTurno(CierreDeTurno turno)
         {
-            _ = ConectorSQLite.Query("DELETE FROM cierreBandera");
+            _ = ConectorSQLite.Query("UPDATE cierreBandera SET hacerCierre = 0 WHERE hacerCierre = 1");
             if (!turno.TurnoSinVentas)
             {
                 try

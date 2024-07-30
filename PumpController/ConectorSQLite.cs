@@ -61,7 +61,7 @@ namespace PumpController
         {
             bool cierreFlag = false;
 
-            string query = $"SELECT EXISTS(SELECT 1 FROM cierreBandera WHERE hacerCierre IS NOT NULL)";
+            string query = $"SELECT hacerCierre FROM cierreBandera LIMIT 1";
 
             using (SQLiteConnection db = new SQLiteConnection(string.Format(connectionString, Configuracion.LeerConfiguracion().ProyNuevoRuta + "\\CDS\\" + databaseName)))
             {
@@ -123,7 +123,9 @@ namespace PumpController
                 }
 
                 createTableQuery = "CREATE TABLE IF NOT EXISTS cierreBandera " +
-                                   "(hacerCierre BLOB)";
+                                   "(hacerCierre INTEGER NOT NULL);" +
+                                   "\nINSERT INTO cierreBandera (hacerCierre) " +
+                                   "SELECT 0 WHERE NOT EXISTS (SELECT 1 FROM cierreBandera)";
                 using (SQLiteCommand command = new SQLiteCommand(createTableQuery, connection))
                 {
                     _ = command.ExecuteNonQuery();

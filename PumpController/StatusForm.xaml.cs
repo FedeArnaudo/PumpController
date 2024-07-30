@@ -102,7 +102,7 @@ namespace PumpController
             notifyIcon = new NotifyIcon
             {
                 Icon = new Icon("LogoSurtidor.ico"),
-                Visible = true,
+                Visible = false,
                 Text = "Controlador De Surtidores"
             };
 
