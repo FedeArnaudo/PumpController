@@ -113,7 +113,13 @@
                     Style="{DynamicResource ButtonStyle}" Click="BtnVerTanques_Click">
                 <TextBlock Text="Ver Tanques" Foreground="White" FontSize="15"></TextBlock>
             </Button>
-            <Button Grid.Row="5" Grid.Column="1" Width="105" Height="35" Background="#988E9F"
+            <Button Grid.Row="5" Grid.Column="1" Width="160" Height="35" Background="#007ED6" BorderBrush="#007ED6"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Margin="0, 0, 0, 0" Name="BtnVerProductos"
+                    Style="{DynamicResource ButtonStyle}" Click="BtnVerProductos_Click">
+                <TextBlock Text="Ver Productos" Foreground="White" FontSize="15"></TextBlock>
+            </Button>
+            <Button Grid.Row="5" Grid.Column="2" Width="105" Height="35" Background="#988E9F"
                     HorizontalAlignment="Center" VerticalAlignment="Center"
                     Margin="0,0,0,0" x:Name="BtnCierre_Anterior"
                     Style="{DynamicResource ButtonStyle}" Click="BtnCierre_Anterior_Click">

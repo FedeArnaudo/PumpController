@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PumpController"
         Icon="LogoSiges.ico"
         mc:Ignorable="d" ResizeMode="NoResize"
-        Title="Info Despachos" Height="421" Width="970">
+        Title="Info Despachos" Height="423" Width="966">
     <Window.Resources>
         <!--#region ButtonStyle-->
         <Style x:Key="FocusVisual">
@@ -82,17 +82,15 @@
                 <RowDefinition Height="150"></RowDefinition>
                 <RowDefinition Height="150"></RowDefinition>
                 <RowDefinition Height="20"></RowDefinition>
-                <RowDefinition Height="30"></RowDefinition>
+                <RowDefinition Height="34"></RowDefinition>
                 <RowDefinition Height="20"></RowDefinition>
             </Grid.RowDefinitions>
             <!--#endregion-->
-            <!--#region TextBlock-->
-            <!--#endregion-->
             <!--#region Button-->
-            <Button Grid.Row="4" Grid.Column="3" Background="#91C1D8" BorderBrush="#91C1D8"
-                    Width="110" Height="30" HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                    Margin="0,0,0,0" Name="btnCerrar"
-                    Style="{DynamicResource ButtonStyle}" Click="BtnCerrar_Click" Grid.ColumnSpan="2">
+            <Button Grid.Row="4" Grid.Column="4" Background="#91C1D8" BorderBrush="#91C1D8"
+                    Width="110" Height="30" HorizontalAlignment="Right" VerticalAlignment="Center"
+                    Margin="0,0,0,0" Name="BtnCerrar"
+                    Style="{DynamicResource ButtonStyle}" Click="BtnCerrar_Click">
                 <TextBlock Text="Cerrar" Foreground="White" FontSize="15"></TextBlock>
             </Button>
             <!--#endregion-->

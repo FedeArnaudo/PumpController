@@ -70,8 +70,7 @@ namespace PumpController
      */
     public class Manguera
     {
-        public Manguera()
-        { }
+        public Manguera() { }
         public int NumeroDeManguera { get; set; }
         public Producto Producto { get; set; }
         public Tanque Tanque { get; set; }

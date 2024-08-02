@@ -63,13 +63,26 @@ namespace PumpController
                     };
                     DescartarCampoVariable(respuesta, ref posicion);
 
-                    foreach (string[] s in combus)
+                    switch (producto.NumeroDeProducto)
                     {
-                        if (ConvertDouble(s[1]) == producto.PrecioUnitario)
-                        {
-                            producto.Descripcion = s[0];
+                        case 1:
+                            producto.Descripcion = "SUPER";
                             break;
-                        }
+                        case 3:
+                            producto.Descripcion = "ULTRA DIESEL";
+                            break;
+                        case 4:
+                            producto.Descripcion = "INFINIA";
+                            break;
+                        case 6:
+                            producto.Descripcion = "INFINIA DIESEL";
+                            break;
+                        case 8:
+                            producto.Descripcion = "DIESEL 500";
+                            break;
+                        default:
+                            producto.Descripcion = "N/Utilizado";
+                            break;
                     }
                     tempProductos.Add(producto);
                 }
@@ -539,7 +552,7 @@ namespace PumpController
             string connectionString = @"Driver={Driver para o Microsoft Visual FoxPro};SourceType=DBF;" + $@"Dbq={rutaDatos}\";
 
             // Definir la consulta SQL
-            string query = "SELECT Desc, Importe FROM Combus";
+            string query = "SELECT Codigo, Desc, Importe FROM Combus";
 
             try
             {
@@ -560,10 +573,11 @@ namespace PumpController
                             while (reader.Read())
                             {
                                 // Acceder a las columnas por índice o nombre
-                                string columna1 = reader.GetString(0);// Suponiendo que el segundo campo es un entero
-                                float columna2 = reader.GetFloat(1);
+                                string columna0 = reader.GetString(0);
+                                string columna1 = reader.GetString(1);
+                                float columna2 = reader.GetFloat(2);
 
-                                datos.Add(item: new string[] { columna1.Trim(), columna2.ToString("0.000").Replace(",", ".") });
+                                datos.Add(item: new string[] { columna0.Trim(), columna1.Trim(), columna2.ToString("0.000").Replace(",", ".") });
                             }
                         }
                     }

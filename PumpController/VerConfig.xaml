@@ -7,7 +7,7 @@
         Icon="LogoSiges.ico"
         mc:Ignorable="d"
         Title="Configuracion de la Estacion"
-        Height="300" Width="366"
+        Height="289" Width="366"
         WindowStartupLocation="Manual" Background="Transparent"
         PreviewKeyDown="Window_PreviewKeyDown" ResizeMode="NoResize">
     <Window.Resources>
@@ -70,7 +70,7 @@
         <!--#endregion-->
     </Window.Resources>
     <Border Background="#D6E2E8">
-        <Grid x:Name="GriInicio" >
+        <Grid x:Name="GriInicio">
             <!--#region COLS and ROWS-->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="20"></ColumnDefinition>

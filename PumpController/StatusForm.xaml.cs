@@ -97,6 +97,11 @@ namespace PumpController
             VerTanques verTanques = new VerTanques();
             verTanques.Show();
         }
+        private void BtnVerProductos_Click(object sender, RoutedEventArgs e)
+        {
+            VerProductos verProductos = new VerProductos();
+            verProductos.Show();
+        }
         private void SetupNotifyIcon()
         {
             notifyIcon = new NotifyIcon

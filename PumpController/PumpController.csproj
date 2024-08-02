@@ -117,6 +117,9 @@
     <Compile Include="VerDespachos.xaml.cs">
       <DependentUpon>VerDespachos.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VerProductos.xaml.cs">
+      <DependentUpon>VerProductos.xaml</DependentUpon>
+    </Compile>
     <Compile Include="VerSurtidores.xaml.cs">
       <DependentUpon>VerSurtidores.xaml</DependentUpon>
     </Compile>
@@ -140,6 +143,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="VerDespachos.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VerProductos.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

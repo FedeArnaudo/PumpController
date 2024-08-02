@@ -205,7 +205,7 @@ namespace PumpController
                                 if (producto.NumeroPorDespacho == 0)
                                 {
                                     producto.NumeroPorDespacho = despacho.ProductoUltimaVenta;
-                                    ConectorSQLite.Query("UPDATE Productos " +
+                                    _ = ConectorSQLite.Query("UPDATE Productos " +
                                                    "SET producto = '" + producto.Descripcion + "', precio = " + producto.PrecioUnitario.ToString(CultureInfo.InvariantCulture) +
                                                                                                 ", numero_despacho =  " + producto.NumeroPorDespacho + " " +
                                                    "WHERE id_producto = " + producto.NumeroDeProducto);

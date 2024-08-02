@@ -26,7 +26,6 @@ C:\Users\Fde\Documents\C#\PumpController\PumpController\bin\Debug\System.Data.SQ
 C:\Users\Fde\Documents\C#\PumpController\PumpController\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 C:\Users\Fde\Documents\C#\PumpController\PumpController\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\Users\Fde\Documents\C#\PumpController\PumpController\bin\Debug\System.ValueTuple.xml
-C:\Users\Fde\Documents\C#\PumpController\PumpController\obj\Debug\PumpController.csproj.AssemblyReference.cache
 C:\Users\Fde\Documents\C#\PumpController\PumpController\obj\Debug\StatusForm.g.cs
 C:\Users\Fde\Documents\C#\PumpController\PumpController\obj\Debug\VerConfig.g.cs
 C:\Users\Fde\Documents\C#\PumpController\PumpController\obj\Debug\VerDespachos.g.cs
@@ -144,3 +143,5 @@ D:\C#\PumpController\PumpController\obj\Debug\PumpController.csproj.CoreCompileI
 D:\C#\PumpController\PumpController\obj\Debug\PumpController.csproj.CopyComplete
 D:\C#\PumpController\PumpController\obj\Debug\PumpController.exe
 D:\C#\PumpController\PumpController\obj\Debug\PumpController.pdb
+C:\Users\Fde\Documents\C#\PumpController\PumpController\obj\Debug\VerProductos.g.cs
+C:\Users\Fde\Documents\C#\PumpController\PumpController\obj\Debug\VerProductos.baml
