@@ -34,16 +34,16 @@ namespace PumpController
             int tanques = 3;
             int productos = 4;
 
-            //Traigo las descripciones de los productos de la tabla combus
-            List<string[]> combus = TraerDescripciones();
-
-            //byte[] respuesta = EnviarComando(mensaje);
             byte[] respuesta = Log.Instance.GetLogLevel().Equals(Log.LogType.t_debug) ? LeerArchivo("ConfigEstacion") : EnviarComando(mensaje);
             try
             {
                 if (respuesta == null || respuesta[confirmacion] != 0x0)
                 {
                     throw new Exception("No se recibió mensaje de confirmación al solicitar info de la estación.");
+                }
+                if (!File.Exists(Environment.CurrentDirectory + "/configEstacion.txt"))
+                {
+                    GuardarRespuesta(respuesta, "configEstacion.txt");
                 }
 
                 estacionTemp.NumeroDeSurtidores = respuesta[surtidores];
@@ -151,13 +151,17 @@ namespace PumpController
         {
             byte[] mensaje = protocolo == 16 ? (new byte[] { 0x68 }) : (new byte[] { 0xB8 });
             int confirmacion = 0;
-            //byte[] respuesta = EnviarComando(mensaje);
+
             byte[] respuesta = Log.Instance.GetLogLevel().Equals(Log.LogType.t_debug) ? LeerArchivo("infoTanques") : EnviarComando(mensaje);
             try
             {
                 if (respuesta == null || respuesta[confirmacion] != 0x0)
                 {
                     throw new Exception("No se recibió mensaje de confirmación al solicitar info del surtidor");
+                }
+                if (!File.Exists(Environment.CurrentDirectory + "/infoTanques.txt"))
+                {
+                    GuardarRespuesta(respuesta, "infoTanques.txt");
                 }
 
                 int posicion = confirmacion + 1;
@@ -192,13 +196,18 @@ namespace PumpController
             int codigo_producto = 3;
 
             Despacho despachoTemp = new Despacho();
-            //byte[] respuesta = EnviarComando(new byte[] { (byte)(mensaje[0] + Convert.ToByte(numeroDeSurtidor)) });
+
             byte[] respuesta = Log.Instance.GetLogLevel().Equals(Log.LogType.t_debug) ? LeerArchivo("despacho-" + numeroDeSurtidor) : EnviarComando(new byte[] { (byte)(mensaje[0] + Convert.ToByte(numeroDeSurtidor)) });
+
             try
             {
                 if (respuesta == null || respuesta[confirmacion] != 0x0)
                 {
                     throw new Exception("No se recibió mensaje de confirmación al solicitar info del surtidor");
+                }
+                if (!File.Exists(Environment.CurrentDirectory + $"/despacho-{numeroDeSurtidor}.txt"))
+                {
+                    GuardarRespuesta(respuesta, $"despacho-{numeroDeSurtidor}.txt");
                 }
 
                 // Proceso ultima venta
@@ -302,7 +311,7 @@ namespace PumpController
         public CierreDeTurno InfoCierreDeTurno()
         {
             byte[] mensaje = new byte[] { 0x07 };  //Comando para pedir la informacion del corte de turno actual
-            byte[] respuesta = EnviarComando(mensaje);
+            byte[] respuesta = Log.Instance.GetLogLevel().Equals(Log.LogType.t_debug) ? LeerArchivo("turnoEnCurso") : EnviarComando(mensaje);
 
             CierreDeTurno cierreDeTurno = InfoTurno(respuesta);
 
@@ -311,7 +320,7 @@ namespace PumpController
         public CierreDeTurno InfoTurnoEnCurso()
         {
             byte[] mensaje = new byte[] { 0x08 };  //Comando para pedir la informacion del turno en curso
-            byte[] respuesta = Log.Instance.GetLogLevel().Equals(Log.LogType.t_debug) ? LeerArchivo("turnoEnCurso1") : EnviarComando(mensaje);
+            byte[] respuesta = EnviarComando(mensaje);
 
             CierreDeTurno turnoEnCurso = InfoTurno(respuesta);
 
@@ -336,6 +345,10 @@ namespace PumpController
                 {
                     turno.TurnoSinVentas = true;
                     return turno;
+                }
+                if (!File.Exists(Environment.CurrentDirectory + "/turnoEnCurso.txt"))
+                {
+                    GuardarRespuesta(respuesta, "turnoEnCurso.txt");
                 }
 
                 int posicion = 1;
@@ -540,55 +553,6 @@ namespace PumpController
                 respuesta = byteArray;
             }
             return respuesta;
-        }
-        /// <summary>
-        /// Metodo para obtener las descripciones de los combustibles de la tabla combus
-        /// </summary>
-        /// <returns> List<string[]> </returns>
-        private List<string[]> TraerDescripciones()
-        {
-            List<string[]> datos = new List<string[]>();
-            string rutaDatos = Configuracion.LeerConfiguracion().ProyNuevoRuta + @"\tablas";
-            string connectionString = @"Driver={Driver para o Microsoft Visual FoxPro};SourceType=DBF;" + $@"Dbq={rutaDatos}\";
-
-            // Definir la consulta SQL
-            string query = "SELECT Codigo, Desc, Importe FROM Combus";
-
-            try
-            {
-                // Crear una conexión a la base de datos
-                using (OdbcConnection connection = new OdbcConnection(connectionString))
-                {
-                    // Abrir la conexión
-                    connection.Open();
-
-                    // Crear un comando SQL con la consulta y la conexión
-                    using (OdbcCommand command = new OdbcCommand(query, connection))
-                    {
-                        // Crear un lector de datos
-                        using (OdbcDataReader reader = command.ExecuteReader())
-                        {
-                            Console.WriteLine();
-                            // Leer y mostrar los datos
-                            while (reader.Read())
-                            {
-                                // Acceder a las columnas por índice o nombre
-                                string columna0 = reader.GetString(0);
-                                string columna1 = reader.GetString(1);
-                                float columna2 = reader.GetFloat(2);
-
-                                datos.Add(item: new string[] { columna0.Trim(), columna1.Trim(), columna2.ToString("0.000").Replace(",", ".") });
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Manejar la excepción
-                Console.WriteLine($"Error al acceder a la tabla Combus. Excepcion: {ex.Message}");
-            }
-            return datos;
         }
         public double ConvertDouble(string value)
         {

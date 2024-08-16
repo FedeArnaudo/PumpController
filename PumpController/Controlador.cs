@@ -66,13 +66,13 @@ namespace PumpController
         /// <returns> true si se pudo inicializar correctamente </returns>
         public static bool Init(Configuracion.InfoConfig infoConfig)
         {
-            Log.Instance.SetLogLevel(Log.LogType.t_info);
-            if (infoConfig.InfoLog.Equals(Log.LogType.t_debug.ToString()))
-            {
-                Log.Instance.SetLogLevel(Log.LogType.t_debug);
-            }
             if (instancia == null && infoConfig != null)
             {
+                Log.Instance.SetLogLevel(Log.LogType.t_info);
+                if (infoConfig.InfoLog.Equals(Log.LogType.t_debug.ToString()))
+                {
+                    Log.Instance.SetLogLevel(Log.LogType.t_debug);
+                }
                 ConectorSQLite.CrearBBDD();
                 switch (infoConfig.TipoControlador)
                 {

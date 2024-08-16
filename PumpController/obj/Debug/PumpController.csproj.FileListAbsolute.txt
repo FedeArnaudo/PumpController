@@ -145,3 +145,6 @@ D:\C#\PumpController\PumpController\obj\Debug\PumpController.exe
 D:\C#\PumpController\PumpController\obj\Debug\PumpController.pdb
 C:\Users\Fde\Documents\C#\PumpController\PumpController\obj\Debug\VerProductos.g.cs
 C:\Users\Fde\Documents\C#\PumpController\PumpController\obj\Debug\VerProductos.baml
+D:\C#\PumpController\PumpController\obj\Debug\PumpController.csproj.AssemblyReference.cache
+D:\C#\PumpController\PumpController\obj\Debug\VerProductos.g.cs
+D:\C#\PumpController\PumpController\obj\Debug\VerProductos.baml

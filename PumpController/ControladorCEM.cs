@@ -90,7 +90,7 @@ namespace PumpController
         }
         public override void GrabarCierreDeTurno()
         {
-            _ = Log.Instance.WriteLog($"Iniciando pedido de informacion del cierre de turno actual.\n", Log.LogType.t_info);
+            _ = Log.Instance.WriteLog($"\nIniciando pedido de informacion del cierre de turno actual.\n", Log.LogType.t_info);
             CierreDeTurno cierreDeTurno = conectorCEM.InfoCierreDeTurno();
             GrabarTurno(cierreDeTurno);
         }
