@@ -143,7 +143,7 @@ namespace PumpController
             }
             catch (Exception e)
             {
-                throw new Exception($"Error al obtener información de la estación. \nExcepción: {e.Message}");
+                throw new Exception($"No se pudo obtener información de la estación.\n\t  Excepción: {e.Message}");
             }
             return estacionTemp;
         }
@@ -183,7 +183,7 @@ namespace PumpController
             }
             catch (Exception e)
             {
-                throw new Exception("Error al obtener informacion del tanque. \nExcepción: " + e.Message);
+                throw new Exception("Error al obtener informacion del tanque. \n\tExcepción: " + e.Message);
             }
             return Estacion.InstanciaEstacion.Tanques;
         }
@@ -203,7 +203,7 @@ namespace PumpController
             {
                 if (respuesta == null || respuesta[confirmacion] != 0x0)
                 {
-                    throw new Exception("No se recibió mensaje de confirmación al solicitar info del surtidor");
+                    throw new Exception("No se recibió mensaje de confirmación al solicitar info del surtidor.");
                 }
                 if (!File.Exists(Environment.CurrentDirectory + $"/despacho-{numeroDeSurtidor}.txt"))
                 {
@@ -304,7 +304,7 @@ namespace PumpController
             }
             catch (Exception e)
             {
-                throw new Exception("Error al obtener informacion del despacho.\nExcepcion: " + e.Message);
+                throw new Exception("\nError al obtener informacion del despacho.\n\tExcepcion: " + e.Message);
             }
             return despachoTemp;
         }
@@ -346,9 +346,9 @@ namespace PumpController
                     turno.TurnoSinVentas = true;
                     return turno;
                 }
-                if (!File.Exists(Environment.CurrentDirectory + "/turnoEnCurso.txt"))
+                if (!File.Exists(Environment.CurrentDirectory + "/Cierre.txt"))
                 {
-                    GuardarRespuesta(respuesta, "turnoEnCurso.txt");
+                    GuardarRespuesta(respuesta, "Cierre.txt");
                 }
 
                 int posicion = 1;
@@ -445,40 +445,40 @@ namespace PumpController
         }
         private byte[] EnviarComando(byte[] comando)
         {
-            try
+            byte[] buffer = null;
+            using (NamedPipeClientStream pipeClient = new NamedPipeClientStream(ipControlador, nombreDelPipe))
             {
-                byte[] buffer = null;
-                string ip = ipControlador;
-                using (NamedPipeClientStream pipeClient = new NamedPipeClientStream(ip, nombreDelPipe))
+                try
                 {
                     int retries = 1;
 
-                    PolicyResult policyResult = Policy.Handle<Exception>().WaitAndRetry
-                        (
-                        retryCount: 5,
-                        sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
-                        onRetry: (exception, TimeSpan, conttext) =>
-                        {
-                            _ = Log.Instance.WriteLog($"Exception: {exception.Message} Intento: {retries}", Log.LogType.t_error);
-                            retries++;
-                        }).ExecuteAndCapture(() =>
-                        {
-                            pipeClient.Connect();
-                            pipeClient.Write(comando, 0, comando.Length);
-
-                            buffer = new byte[pipeClient.OutBufferSize];
-
-                            _ = pipeClient.Read(buffer, 0, buffer.Length);
-                        });
-                    pipeClient.Close();
-                    pipeClient.Dispose();
+                    PolicyResult policyResult = Policy.Handle<Exception>()
+                        .WaitAndRetry(retryCount: 5,
+                                      sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+                                      onRetry: (exception, TimeSpan, conttext) =>
+                                      {
+                                          pipeClient.Dispose();
+                                          _ = Log.Instance.WriteLog($"\n\t  Excepción: {exception.Message.Trim()} Intento: {retries}", Log.LogType.t_error);
+                                          retries++;
+                                      }).ExecuteAndCapture(() =>
+                                      {
+                                          pipeClient.Connect();
+                                          pipeClient.Write(comando, 0, comando.Length);
+                                          buffer = new byte[pipeClient.OutBufferSize];
+                                          _ = pipeClient.Read(buffer, 0, buffer.Length);
+                                      });
+                    if (policyResult.Outcome != 0)
+                    {
+                        _ = Log.Instance.WriteLog($"  Fin de intentos...\n", Log.LogType.t_error);
+                        pipeClient.Close();
+                    }
                 }
-                return buffer;
+                catch (Exception e)
+                {
+                    throw new Exception(e.Message);
+                }
             }
-            catch (Exception e)
-            {
-                throw new Exception($"Error al enviar el comando. \nExcepción: {e.Message}");
-            }
+            return buffer;
         }
         /*
          * Metodo para leer los campos variables, por ejemplo precios o cantidades.

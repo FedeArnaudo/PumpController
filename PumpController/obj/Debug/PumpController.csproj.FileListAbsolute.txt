@@ -148,3 +148,4 @@ C:\Users\Fde\Documents\C#\PumpController\PumpController\obj\Debug\VerProductos.b
 D:\C#\PumpController\PumpController\obj\Debug\PumpController.csproj.AssemblyReference.cache
 D:\C#\PumpController\PumpController\obj\Debug\VerProductos.g.cs
 D:\C#\PumpController\PumpController\obj\Debug\VerProductos.baml
+C:\Users\Fde\Documents\C#\PumpController\PumpController\obj\Debug\PumpController.csproj.AssemblyReference.cache

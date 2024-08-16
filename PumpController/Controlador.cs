@@ -6,8 +6,6 @@ namespace PumpController
 {
     internal abstract class Controlador
     {
-        public Controlador() { }
-
         // Instancia de Singleton
         private static Controlador instancia = null;
         // Hilo para manejar el proceso principal de consulta al controlador en paralelo
@@ -20,6 +18,13 @@ namespace PumpController
         public static bool endWork = false;
         public static bool pedirCierreAnterior = false;
         private static readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        public Controlador() { }
+        public static StatusForm StatusForm { get; set; }
+        private void UpdateLabelContent(string newContent)
+        {
+            //StatusForm.UpdateLabel(newContent);
+            StatusForm.LabelState.Content = newContent;
+        }
         /// <summary>
         /// Este método estático es el encargado de configurar la estructura de la estacion,
         /// para obtener los productos, los tanques, las mangueras y surtidores, etc.
@@ -105,6 +110,10 @@ namespace PumpController
                     while (!ConectorSQLite.ComprobarCierre())
                     {
                         instancia.GrabarDespachos();
+                        StatusForm.LabelState.Dispatcher.Invoke(() =>
+                        {
+                            StatusForm.LabelState.Content = "Controlador\nOnLine";
+                        });
 
                         /// Espera para procesar nuevamente
                         Thread.Sleep(loopDelaySeconds * 1000);
@@ -125,7 +134,12 @@ namespace PumpController
                 }
                 catch (Exception e)
                 {
-                    _ = Log.Instance.WriteLog($"Error en el loop del controlador.\nExcepción: {e.Message}\n", Log.LogType.t_error);
+                    _ = Log.Instance.WriteLog($"  Error en el loop del controlador.\n\t  Excepción: {e.Message}\n", Log.LogType.t_error);
+                    StatusForm.LabelState.Dispatcher.Invoke(() =>
+                    {
+                        StatusForm.LabelState.Content = "Controlador\nDesconectado";
+                    });
+
                 }
             }
         }

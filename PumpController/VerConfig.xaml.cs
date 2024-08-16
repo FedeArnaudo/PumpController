@@ -19,7 +19,7 @@ namespace PumpController
         {
             InitializeComponent();
             Icon = new BitmapImage(new Uri("pack://application:,,,/PumpController;component/LogoSiges.ico"));
-            //Loaded += new RoutedEventHandler(ConfiguracionForm_Load);
+            Loaded += new RoutedEventHandler(ConfiguracionForm_Load);
         }
         private void ConfiguracionForm_Load(object sender, EventArgs e)
         {
@@ -43,13 +43,13 @@ namespace PumpController
                 {
                     ComboBoxMode.Text = infoConfig.InfoLog;
                 }
-                StatusForm statusForm = new StatusForm
+                /*StatusForm statusForm = new StatusForm
                 {
                     Owner = this
                 };
                 Hide();
                 _ = statusForm.ShowDialog();
-                statusForm.Show();
+                statusForm.Show();*/
             }
         }
         private void BtnConfig_Click(object sender, RoutedEventArgs e)

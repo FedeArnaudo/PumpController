@@ -27,6 +27,7 @@ namespace PumpController
     {
         private NotifyIcon notifyIcon;
 
+
         public StatusForm()
         {
             BuscarPrograma("PumpController");
@@ -56,12 +57,9 @@ namespace PumpController
         }
         private void Init()
         {
+            Controlador.StatusForm = this;
             if (!Controlador.Init(Configuracion.LeerConfiguracion()))
             {
-
-                // TODO: Borrar archivo config para que no abra de vuelta.
-
-                //btnCerrar_Click(null, null); // Cerrar
                 _ = Log.Instance.WriteLog("Error en la lectura del archivo inicial", Log.LogType.t_info);
                 Close();
             }
@@ -191,6 +189,11 @@ namespace PumpController
             {
                 DragMove();
             }
+        }
+
+        public void UpdateLabel(string newLabelContent)
+        {
+            LabelState.Content = newLabelContent;
         }
     }
 }

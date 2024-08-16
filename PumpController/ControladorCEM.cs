@@ -49,7 +49,7 @@ namespace PumpController
             }
             catch (Exception e)
             {
-                throw new Exception($"Error en el metodo GrabarConfigEstacion. Excepcion: {e.Message}");
+                throw new Exception($"Error en el metodo GrabarConfigEstacion.\n\tExcepcion: {e.Message}");
             }
         }
         public override void GrabarTanques()

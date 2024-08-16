@@ -86,7 +86,7 @@
                 <RowDefinition Height="15"></RowDefinition>
             </Grid.RowDefinitions>
             <!--#endregion-->
-            <!--#region button-->
+            <!--#region BUTTON-->
             <Button Grid.Row="1" Grid.Column="1" Width="160" Height="35" Background="#007ED6" BorderBrush="#007ED6"
                     HorizontalAlignment="Center" VerticalAlignment="Center"
                     Margin="0, 0, 0, 0" Name="btnCambiarConfig"
@@ -126,7 +126,7 @@
                 <TextBlock Text="Cierre Anterior" Foreground="White" FontSize="15"/>
             </Button>
             <!--#endregion-->
-            <!--#region Top Margin-->
+            <!--#region TOP MARGIN-->
             <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Background="#FF3C7FB1">
                 <Button Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"  Width="25" Height="25" Background="#1B1448" BorderBrush="#007ED6"
                     HorizontalAlignment="Right" VerticalAlignment="Center"
@@ -141,6 +141,13 @@
                     <TextBlock Text="X" Foreground="White" FontSize="15"></TextBlock>
                 </Button>
             </Grid>
+
+            <!--#endregion-->
+            <!--#region LABEL-->
+            <Label Grid.Row="1" Grid.Column="2" x:Name="LabelState" Background="AliceBlue"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" Height="51" Width="160"
+                   Content="Iniciando..." FontFamily="Montcerrat" FontSize="16"
+                   HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="5,0"/>
             <!--#endregion-->
         </Grid>
     </Border>
