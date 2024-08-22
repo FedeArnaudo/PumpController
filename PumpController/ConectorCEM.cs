@@ -475,7 +475,7 @@ namespace PumpController
                 }
                 catch (Exception e)
                 {
-                    throw new Exception(e.Message);
+                    throw new Exception($"Error al enviar comando. Excepcón: {e.Message}");
                 }
             }
             return buffer;

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PumpController"
         Icon="LogoSiges.ico"
         mc:Ignorable="d" WindowStyle="None"
-        Title="Controlador de Surtidores" Height="300" Width="370" ResizeMode="CanMinimize"
+        Title="Controlador de Surtidores" Height="355" Width="376" ResizeMode="CanMinimize"
         MouseDown="Window_MouseDown">
     <Window.Resources>
         <!--#region ButtonStle-->
@@ -72,17 +72,18 @@
             <!--#region COLS and ROWS-->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="15"></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="170"></ColumnDefinition>
+                <ColumnDefinition Width="170"></ColumnDefinition>
                 <ColumnDefinition Width="15"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
                 <RowDefinition Height="15"></RowDefinition>
             </Grid.RowDefinitions>
             <!--#endregion-->
@@ -125,9 +126,16 @@
                     Style="{DynamicResource ButtonStyle}" Click="BtnCierre_Anterior_Click">
                 <TextBlock Text="Cierre Anterior" Foreground="White" FontSize="15"/>
             </Button>
+            <Button Grid.Row="6" Grid.Column="1" Width="35" Height="35" Background="#007ED6"
+                    HorizontalAlignment="Left" VerticalAlignment="Center"
+                    Margin="20,0,0,0" x:Name="BtnIP"
+                    Style="{DynamicResource ButtonStyle}">
+                <TextBlock Text="IP" Foreground="White" FontSize="15"/>
+            </Button>
             <!--#endregion-->
             <!--#region TOP MARGIN-->
-            <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Background="#FF3C7FB1">
+            <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Background="#FF3C7FB1"
+                  Width="376" HorizontalAlignment="Center" Margin="0,0,-2,0">
                 <Button Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"  Width="25" Height="25" Background="#1B1448" BorderBrush="#007ED6"
                     HorizontalAlignment="Right" VerticalAlignment="Center"
                     Margin="0, 0, 35, 0" Name="BtnMinimizar"
@@ -141,13 +149,13 @@
                     <TextBlock Text="X" Foreground="White" FontSize="15"></TextBlock>
                 </Button>
             </Grid>
-
             <!--#endregion-->
             <!--#region LABEL-->
-            <Label Grid.Row="1" Grid.Column="2" x:Name="LabelState" Background="AliceBlue"
-                   HorizontalAlignment="Center" VerticalAlignment="Center" Height="51" Width="160"
+            <Label Grid.Row="6" Grid.Column="1" x:Name="LabelState" Background="AliceBlue"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" Height="50" Width="170"
                    Content="Iniciando..." FontFamily="Montcerrat" FontSize="16"
-                   HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="5,0"/>
+                   HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                   Grid.ColumnSpan="2" />
             <!--#endregion-->
         </Grid>
     </Border>

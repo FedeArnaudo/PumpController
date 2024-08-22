@@ -10,7 +10,8 @@ namespace PumpController
         private static Controlador instancia = null;
         // Hilo para manejar el proceso principal de consulta al controlador en paralelo
         // al resto de la ejecución
-        private static readonly Thread procesoPrincipal = null;
+        private static Task procesoPrincipal = null;
+        //private static 
 
         // Tiempo de espera entre cada procesamiento en segundos.
         private static readonly int loopDelaySeconds = 2;
@@ -20,11 +21,7 @@ namespace PumpController
         private static readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         public Controlador() { }
         public static StatusForm StatusForm { get; set; }
-        private void UpdateLabelContent(string newContent)
-        {
-            //StatusForm.UpdateLabel(newContent);
-            StatusForm.LabelState.Content = newContent;
-        }
+
         /// <summary>
         /// Este método estático es el encargado de configurar la estructura de la estacion,
         /// para obtener los productos, los tanques, las mangueras y surtidores, etc.
@@ -87,19 +84,21 @@ namespace PumpController
                     default:
                         break;
                 }
-                if (procesoPrincipal == null || !procesoPrincipal.IsAlive)
-                {
-                    _ = Task.Run(() => Run(cancellationTokenSource.Token));
-                }
             }
             else if (infoConfig == null)
             {
                 return false;
             }
+
+            if (procesoPrincipal == null)
+            {
+                procesoPrincipal = Task.Run(() => Run(cancellationTokenSource.Token));
+            }
             return true;
         }
         private static void Run(CancellationToken token)
         {
+            int retries = 5;
             while (!token.IsCancellationRequested)
             {
                 try
@@ -134,12 +133,17 @@ namespace PumpController
                 }
                 catch (Exception e)
                 {
-                    _ = Log.Instance.WriteLog($"  Error en el loop del controlador.\n\t  Excepción: {e.Message}\n", Log.LogType.t_error);
+                    _ = Log.Instance.WriteLog($"  {procesoPrincipal.Status} Error en el loop del controlador.\n\t  Excepción: {e.Message}\n", Log.LogType.t_error);
                     StatusForm.LabelState.Dispatcher.Invoke(() =>
                     {
                         StatusForm.LabelState.Content = "Controlador\nDesconectado";
                     });
 
+                    if (retries == 0)
+                    {
+                        procesoPrincipal = Task.Run(() => Run(cancellationTokenSource.Token));
+                    }
+                    retries--;
                 }
             }
         }

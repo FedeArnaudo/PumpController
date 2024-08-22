@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using System.Threading;
 
 namespace PumpController
 {
@@ -296,7 +297,7 @@ namespace PumpController
                                 if (producto.NumeroPorDespacho == 0)
                                 {
                                     producto.NumeroPorDespacho = despacho.ProductoVentaAnterior;
-                                    ConectorSQLite.Query("UPDATE Productos " +
+                                    _ = ConectorSQLite.Query("UPDATE Productos " +
                                                    "SET producto = '" + producto.Descripcion + "', precio = " + producto.PrecioUnitario.ToString(CultureInfo.InvariantCulture) +
                                                                                                 ", numero_despacho =  " + producto.NumeroPorDespacho + " " +
                                                    "WHERE id_producto = " + producto.NumeroDeProducto);
@@ -354,6 +355,7 @@ namespace PumpController
                             despacho_pedido);
                         _ = ConectorSQLite.Query(string.Format("INSERT INTO Despachos ({0}) VALUES ({1})", campos, row));
                     }
+                    Thread.Sleep(100);
                 }
                 catch (Exception e)
                 {

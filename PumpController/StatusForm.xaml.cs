@@ -84,6 +84,7 @@ namespace PumpController
         {
             VerConfig verConfig = new VerConfig();
             verConfig.Show();
+            Init();
         }
         private void BtnVerConfigEstacion_Click(object sender, RoutedEventArgs e)
         {
