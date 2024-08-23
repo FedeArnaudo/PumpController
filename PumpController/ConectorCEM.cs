@@ -198,7 +198,6 @@ namespace PumpController
             Despacho despachoTemp = new Despacho();
 
             byte[] respuesta = Log.Instance.GetLogLevel().Equals(Log.LogType.t_debug) ? LeerArchivo("despacho-" + numeroDeSurtidor) : EnviarComando(new byte[] { (byte)(mensaje[0] + Convert.ToByte(numeroDeSurtidor)) });
-
             try
             {
                 if (respuesta == null || respuesta[confirmacion] != 0x0)
@@ -471,6 +470,11 @@ namespace PumpController
                     {
                         _ = Log.Instance.WriteLog($"  Fin de intentos...\n", Log.LogType.t_error);
                         pipeClient.Close();
+                        Controlador.CheckConexion(1);
+                    }
+                    else
+                    {
+                        Controlador.CheckConexion(0);
                     }
                 }
                 catch (Exception e)

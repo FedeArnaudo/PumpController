@@ -72,12 +72,12 @@ namespace PumpController
         {
             if (instancia == null && infoConfig != null)
             {
+                ConectorSQLite.CrearBBDD();
                 Log.Instance.SetLogLevel(Log.LogType.t_info);
                 if (infoConfig.InfoLog.Equals(Log.LogType.t_debug.ToString()))
                 {
                     Log.Instance.SetLogLevel(Log.LogType.t_debug);
                 }
-                ConectorSQLite.CrearBBDD();
                 switch (infoConfig.TipoControlador)
                 {
                     case "CEM-44":
@@ -146,6 +146,11 @@ namespace PumpController
         public static void Stop()
         {
             cancellationTokenSource.Cancel();
+        }
+
+        public static void CheckConexion(int conexion)
+        {
+            _ = ConectorSQLite.Query($"UPDATE CheckConexion SET isConnected = {conexion} WHERE idConexion = 1");
         }
     }
 }

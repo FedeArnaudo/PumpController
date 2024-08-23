@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PumpController"
         mc:Ignorable="d" ResizeMode="CanMinimize"
-        Title="VerIPs" Height="371" Width="408">
+        Icon="LogoSiges.ico"
+        Title="Registrar Info CIO" Height="321" Width="408">
     <Border Background="#D6E2E8">
         <Grid>
             <!--#region COLS AND ROWS-->
@@ -17,38 +18,68 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="10"></RowDefinition>
-                <RowDefinition Height="310"></RowDefinition>
+                <RowDefinition Height="260"></RowDefinition>
                 <RowDefinition Height="20"></RowDefinition>
             </Grid.RowDefinitions>
             <!--#endregion-->
             <!--#region TEXT BLOCK-->
-            <TextBlock Grid.Column="1" Grid.Row="1" Text="VOX: "
-                       Height="25" Width="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, 25, 0, 0"
+            <TextBlock Grid.Column="1" Grid.Row="1" Text="IP VOX: "
+                       Height="20" Width="75" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, 25, 0, 0"
                        TextAlignment="Left" FontSize="15"></TextBlock>
-            <TextBlock Grid.Column="1" Grid.Row="1" Text="BRIDGE: "
-                       Height="25" Width="60" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, 55, 0, 0"
+            <TextBlock Grid.Column="1" Grid.Row="1" Text="IP BRIDGE: "
+                       Height="20" Width="75" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, 55, 0, 0"
+                       TextAlignment="Left" FontSize="15"></TextBlock>
+            <TextBlock Grid.Column="1" Grid.Row="1" Text="IP SERVER: "
+                       Height="20" Width="75" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, 85, 0, 0"
+                       TextAlignment="Left" FontSize="15"></TextBlock>
+            <TextBlock Grid.Column="1" Grid.Row="1" Text="IP LIBRE: "
+                       Height="20" Width="75" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, 115, 0, 0"
+                       TextAlignment="Left" FontSize="15"></TextBlock>
+            <TextBlock Grid.Column="1" Grid.Row="1" Text="RUTEO ESTATICO: "
+                       Height="20" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, 145, 0, 0"
                        TextAlignment="Left" FontSize="15"></TextBlock>
             <!--#endregion-->
             <!--#region TEXT BOX-->
-            <TextBox Grid.Column="2" Grid.Row="1" x:Name="vox_TextBox"
+            <TextBox Grid.Column="2" Grid.Row="1" x:Name="ipVox_TextBox"
                      Height="25" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, 25, 0, 0"
                      BorderThickness="2" TextAlignment="Justify" FontSize="15"></TextBox>
             <TextBox Grid.Column="1" Grid.Row="1"
                      Height="25" Width="130" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, 25, 0, 0"
                      BorderThickness="0, 0, 0, 3" Background="Transparent" IsEnabled="False"></TextBox>
-            <TextBox Grid.Column="2" Grid.Row="1" x:Name="bridge_TextBox"
+            <TextBox Grid.Column="2" Grid.Row="1" x:Name="ipBridge_TextBox"
                      Height="25" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, 55, 0, 0"
                      BorderThickness="2" TextAlignment="Justify" FontSize="15"></TextBox>
             <TextBox Grid.Column="1" Grid.Row="1"
                      Height="25" Width="130" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, 55, 0, 0"
                      BorderThickness="0, 0, 0, 3" Background="Transparent" IsEnabled="False"></TextBox>
+            <TextBox Grid.Column="2" Grid.Row="1" x:Name="ipServer_TextBox"
+                     Height="25" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, 85, 0, 0"
+                     BorderThickness="2" TextAlignment="Justify" FontSize="15"></TextBox>
+            <TextBox Grid.Column="1" Grid.Row="1"
+                     Height="25" Width="130" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, 85, 0, 0"
+                     BorderThickness="0, 0, 0, 3" Background="Transparent" IsEnabled="False"></TextBox>
+            <TextBox Grid.Column="2" Grid.Row="1" x:Name="ipLibre_TextBox"
+                     Height="25" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, 115, 0, 0"
+                     BorderThickness="2" TextAlignment="Justify" FontSize="15"></TextBox>
+            <TextBox Grid.Column="1" Grid.Row="1"
+                     Height="25" Width="130" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, 115, 0, 0"
+                     BorderThickness="0, 0, 0, 3" Background="Transparent" IsEnabled="False"></TextBox>
+            <TextBox Grid.Column="2" Grid.Row="1" x:Name="RuteoEstatico_TextBox"
+                     Height="25" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, 145, 0, 0"
+                     BorderThickness="2" TextAlignment="Justify" FontSize="15"></TextBox>
+            <TextBox Grid.Column="1" Grid.Row="1"
+                     Height="25" Width="130" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, 145, 0, 0"
+                     BorderThickness="0, 0, 0, 3" Background="Transparent" IsEnabled="False"></TextBox>
+            
             <!--#endregion-->
-            <Button Grid.Row="1" Grid.Column="1" Width="120" Height="35" Background="#007ED6" BorderBrush="#007ED6"
+            <!--#region BUTTON-->
+            <Button Grid.Row="1" Grid.Column="1" Width="80" Height="35" Background="#007ED6" BorderBrush="#007ED6"
                     HorizontalAlignment="Center" VerticalAlignment="Bottom"
-                    Margin="0, 0, 0, 0" Name="BtnGUARDAR"
+                    Margin="0, 0, 0, 10" Name="BtnGUARDAR"
                     Click="BtnGUARDAR_Click">
                 <TextBlock Text="GUARDAR" Foreground="White" FontSize="15"></TextBlock>
             </Button>
+            <!--#endregion-->
         </Grid>
     </Border>
 </Window>

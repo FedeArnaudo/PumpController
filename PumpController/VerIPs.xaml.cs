@@ -24,6 +24,7 @@ namespace PumpController
         public VerIPs()
         {
             InitializeComponent();
+            Icon = new BitmapImage(new Uri("pack://application:,,,/PumpController;component/LogoSurtidor.ico"));
             LeerConfiguracion();
         }
 
@@ -32,8 +33,11 @@ namespace PumpController
             //Crea el archivo config.ini
             using (StreamWriter outputFile = new StreamWriter(txtCIO, false))
             {
-                outputFile.WriteLine($"VOX: {vox_TextBox.Text.Trim()}");
-                outputFile.WriteLine($"BRIDGE: {bridge_TextBox.Text.Trim()}");
+                outputFile.WriteLine($"IP VOX: {ipVox_TextBox.Text.Trim()}");
+                outputFile.WriteLine($"IP BRIDGE: {ipBridge_TextBox.Text.Trim()}");
+                outputFile.WriteLine($"IP SERVER: {ipServer_TextBox.Text.Trim()}");
+                outputFile.WriteLine($"IP LIBRE: {ipLibre_TextBox.Text.Trim()}");
+                outputFile.WriteLine($"RUTEO ESTATICO: {RuteoEstatico_TextBox.Text.Trim()}");
             }
             Close();
         }
@@ -55,8 +59,11 @@ namespace PumpController
 
                     if (!string.IsNullOrWhiteSpace(content))
                     {
-                        vox_TextBox.Text = reader.ReadLine().Trim().Substring(5);
-                        bridge_TextBox.Text = reader.ReadLine().Trim().Substring(8);
+                        ipVox_TextBox.Text = reader.ReadLine().Trim().Substring(8);
+                        ipBridge_TextBox.Text = reader.ReadLine().Trim().Substring(11);
+                        ipServer_TextBox.Text = reader.ReadLine().Trim().Substring(11);
+                        ipLibre_TextBox.Text = reader.ReadLine().Trim().Substring(10);
+                        RuteoEstatico_TextBox.Text = reader.ReadLine().Trim().Substring(16);
                     }
                     reader.Close();
                 }
