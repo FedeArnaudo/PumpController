@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using Color = System.Windows.Media.Color;
 
 namespace PumpController
 {
@@ -89,7 +91,6 @@ namespace PumpController
             {
                 return false;
             }
-
             if (procesoPrincipal == null)
             {
                 procesoPrincipal = Task.Run(() => Run(cancellationTokenSource.Token));
@@ -98,7 +99,6 @@ namespace PumpController
         }
         private static void Run(CancellationToken token)
         {
-            int retries = 5;
             while (!token.IsCancellationRequested)
             {
                 try
@@ -112,6 +112,7 @@ namespace PumpController
                         StatusForm.LabelState.Dispatcher.Invoke(() =>
                         {
                             StatusForm.LabelState.Content = "Controlador\nOnLine";
+                            StatusForm.LabelState.Background = new SolidColorBrush(Colors.AliceBlue);
                         });
 
                         /// Espera para procesar nuevamente
@@ -137,13 +138,8 @@ namespace PumpController
                     StatusForm.LabelState.Dispatcher.Invoke(() =>
                     {
                         StatusForm.LabelState.Content = "Controlador\nDesconectado";
+                        StatusForm.LabelState.Background = new SolidColorBrush(Color.FromRgb(214, 40, 40));
                     });
-
-                    if (retries == 0)
-                    {
-                        procesoPrincipal = Task.Run(() => Run(cancellationTokenSource.Token));
-                    }
-                    retries--;
                 }
             }
         }

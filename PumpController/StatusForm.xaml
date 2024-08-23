@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PumpController"
         Icon="LogoSiges.ico"
         mc:Ignorable="d" WindowStyle="None"
-        Title="Controlador de Surtidores" Height="355" Width="376" ResizeMode="CanMinimize"
+        Title="Controlador de Surtidores" Height="355" Width="370" ResizeMode="CanMinimize"
         MouseDown="Window_MouseDown">
     <Window.Resources>
         <!--#region ButtonStle-->
@@ -126,28 +126,34 @@
                     Style="{DynamicResource ButtonStyle}" Click="BtnCierre_Anterior_Click">
                 <TextBlock Text="Cierre Anterior" Foreground="White" FontSize="15"/>
             </Button>
-            <Button Grid.Row="6" Grid.Column="1" Width="35" Height="35" Background="#007ED6"
-                    HorizontalAlignment="Left" VerticalAlignment="Center"
-                    Margin="20,0,0,0" x:Name="BtnIP"
-                    Style="{DynamicResource ButtonStyle}">
-                <TextBlock Text="IP" Foreground="White" FontSize="15"/>
+            <Button Grid.Row="6" Grid.Column="1" Width="40" Height="40" Background="#FFB6C1" x:Name="BtnIP"
+                    HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0"
+                    Style="{DynamicResource ButtonStyle}" Click="BtnIP_Click">
+                <Image Source="pack://application:,,,/data1.ico" Width="36" Height="36"></Image>
             </Button>
             <!--#endregion-->
             <!--#region TOP MARGIN-->
             <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Background="#FF3C7FB1"
-                  Width="376" HorizontalAlignment="Center" Margin="0,0,-2,0">
-                <Button Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"  Width="25" Height="25" Background="#1B1448" BorderBrush="#007ED6"
+                  HorizontalAlignment="Center" Margin="0,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="280"/>
+                    <ColumnDefinition Width="90"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Row="0" Grid.Column="1"  Width="25" Height="25" Background="#1B1448" BorderBrush="#007ED6"
                     HorizontalAlignment="Right" VerticalAlignment="Center"
-                    Margin="0, 0, 35, 0" Name="BtnMinimizar"
+                    Margin="0,3,45,3" Name="BtnMinimizar"
                     Style="{DynamicResource ButtonStyle}" Click="BtnMinimizar_Click">
                     <TextBlock Text="-" Foreground="White" FontSize="15"></TextBlock>
                 </Button>
-                <Button Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"  Width="25" Height="25" Background="#1B1448" BorderBrush="#007ED6"
+                <Button Grid.Row="0" Grid.Column="1"  Width="25" Height="25" Background="#1B1448" BorderBrush="#007ED6"
                     HorizontalAlignment="Right" VerticalAlignment="Center"
-                    Margin="0, 0, 5, 0" Name="BtnCerrar"
+                    Margin="0,3,10,3" Name="BtnCerrar"
                     Style="{DynamicResource ButtonStyle}" Click="BtnCerrar_Click">
                     <TextBlock Text="X" Foreground="White" FontSize="15"></TextBlock>
                 </Button>
+                <Image Source="pack://application:,,,/LogoSurtidor.ico"
+                       Width="30" Height="30"
+                       HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"></Image>
             </Grid>
             <!--#endregion-->
             <!--#region LABEL-->

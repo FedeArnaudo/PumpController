@@ -150,10 +150,19 @@ namespace PumpController
         }
         private void BtnCerrar_Click(object sender, RoutedEventArgs e)
         {
-            Controlador.Stop();
-            notifyIcon.Dispose();
-            base.OnClosed(e);
-            Close();
+            // Mostrar un cuadro de diálogo de confirmación
+            MessageBoxResult result = MessageBox.Show("¿Está seguro de que desea realizar esta acción?\n      El programa dejará de funcionar.",
+                                                      "Confirmación",
+                                                      MessageBoxButton.YesNo,
+                                                      MessageBoxImage.Question);
+            // Verificar la respuesta del usuario
+            if (result == MessageBoxResult.Yes)
+            {
+                Controlador.Stop();
+                notifyIcon.Dispose();
+                base.OnClosed(e);
+                Close();
+            }
         }
 
         private void BtnCierre_Anterior_Click(object sender, RoutedEventArgs e)
@@ -195,6 +204,12 @@ namespace PumpController
         public void UpdateLabel(string newLabelContent)
         {
             LabelState.Content = newLabelContent;
+        }
+
+        private void BtnIP_Click(object sender, RoutedEventArgs e)
+        {
+            VerIPs verIPs = new VerIPs();
+            verIPs.Show();
         }
     }
 }
