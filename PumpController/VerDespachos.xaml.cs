@@ -24,7 +24,7 @@ namespace PumpController
         public VerDespachos()
         {
             InitializeComponent();
-            Icon = new BitmapImage(new Uri("pack://application:,,,/PumpController;component/LogoSiges.ico"));
+            Icon = new BitmapImage(new Uri("pack://application:,,,/PumpController;component/Images/LogoSurtidor.ico"));
 
             DataTable result = ConectorSQLite.Dt_query("SELECT * FROM Despachos ORDER BY fecha DESC");
 

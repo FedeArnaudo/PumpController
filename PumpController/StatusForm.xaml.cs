@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ContextMenu = System.Windows.Forms.ContextMenu;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using MessageBox = System.Windows.MessageBox;
 
 namespace PumpController
@@ -32,7 +33,7 @@ namespace PumpController
         {
             BuscarPrograma("PumpController");
             InitializeComponent();
-            Icon = new BitmapImage(new Uri("pack://application:,,,/PumpController;component/LogoSiges.ico"));
+            Icon = new BitmapImage(new Uri("pack://application:,,,/PumpController;component/Images/LogoSurtidor.ico"));
             SetupNotifyIcon();
             Loaded += new RoutedEventHandler(StatusForm_Load);
         }
@@ -210,6 +211,27 @@ namespace PumpController
         {
             VerIPs verIPs = new VerIPs();
             verIPs.Show();
+        }
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            // Combinación de teclas Ctrl + Shift + E
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            {
+                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                {
+                    if (e.Key == Key.E)
+                    {
+                        if (BtnCierre_Anterior.Visibility == Visibility.Visible)
+                        {
+                            BtnCierre_Anterior.Visibility = Visibility.Hidden;
+                        }
+                        else
+                        {
+                            BtnCierre_Anterior.Visibility = Visibility.Visible;
+                        }
+                    }
+                }
+            }
         }
     }
 }

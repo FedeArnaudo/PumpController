@@ -159,7 +159,7 @@ namespace PumpController
 
                 createTableQuery = "CREATE TABLE IF NOT EXISTS Productos " +
                                    "(id_producto INTEGER PRIMARY KEY, numero_producto INTEGER NOT NULL, numero_despacho INTEGER NOT NULL," +
-                                   "producto TEXT NOT NULL, precio REAL NOT NULL)";
+                                   " producto TEXT NOT NULL, precio REAL NOT NULL)";
                 using (SQLiteCommand command = new SQLiteCommand(createTableQuery, connection))
                 {
                     _ = command.ExecuteNonQuery();
@@ -170,6 +170,18 @@ namespace PumpController
                                    "\nINSERT INTO CheckConexion (idConexion, isConnected)" +
                                    "\nSELECT 1, 0 " +
                                    "\nWHERE NOT EXISTS (SELECT 1 FROM CheckConexion WHERE idConexion = 1)";
+                using (SQLiteCommand command = new SQLiteCommand(createTableQuery, connection))
+                {
+                    _ = command.ExecuteNonQuery();
+                }
+
+                createTableQuery = "CREATE TABLE IF NOT EXISTS Datos_CIO " +
+                                   "(id_cio INTEGER PRIMARY KEY, ip_vox TEXT NOT NULL, ip_bridge TEXT NOT NULL, " +
+                                   "ip_server TEXT NOT NULL, ip_libre TEXT NOT NULL, " +
+                                   "ruteo_estatico TEXT, fecha date DEFAULT(datetime('now', 'localtime')));" +
+                                   "\nINSERT INTO Datos_CIO (id_cio, ip_vox, ip_bridge, ip_server, ip_libre, ruteo_estatico)" +
+                                   "\nSELECT 1, '', '', '', '', '' " +
+                                   "\nWHERE NOT EXISTS (SELECT 1 FROM Datos_CIO WHERE id_cio = 1);";
                 using (SQLiteCommand command = new SQLiteCommand(createTableQuery, connection))
                 {
                     _ = command.ExecuteNonQuery();

@@ -18,7 +18,7 @@ namespace PumpController
         public VerConfig()
         {
             InitializeComponent();
-            Icon = new BitmapImage(new Uri("pack://application:,,,/PumpController;component/LogoSiges.ico"));
+            Icon = new BitmapImage(new Uri("pack://application:,,,/PumpController;component/Images/LogoSurtidor.ico"));
             Loaded += new RoutedEventHandler(ConfiguracionForm_Load);
         }
         private void ConfiguracionForm_Load(object sender, EventArgs e)

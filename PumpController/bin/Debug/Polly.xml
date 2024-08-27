@@ -757,6 +757,13 @@
             <param name="message">The message.</param>
             <param name="innerException">The inner exception.</param>
         </member>
+        <member name="M:Polly.Bulkhead.BulkheadRejectedException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Polly.Bulkhead.BulkheadRejectedException"/> class.
+            </summary>
+            <param name="info">The information.</param>
+            <param name="context">The context.</param>
+        </member>
         <member name="T:Polly.Bulkhead.IBulkheadPolicy">
             <summary>
             Defines properties and methods common to all bulkhead policies.
@@ -8664,6 +8671,13 @@
             <param name="message">The message.</param>
             <param name="retryAfter">The timespan after which the operation may be retried.</param>
             <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:Polly.RateLimit.RateLimitRejectedException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Polly.RateLimit.RateLimitRejectedException"/> class.
+            </summary>
+            <param name="info">The information.</param>
+            <param name="context">The context.</param>
         </member>
         <member name="T:Polly.Registry.IConcurrentPolicyRegistry`1">
             <summary>

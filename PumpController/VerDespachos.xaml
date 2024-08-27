@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PumpController"
-        Icon="LogoSiges.ico"
+        Icon="Images/LogoSurtidor.ico"
         mc:Ignorable="d" ResizeMode="NoResize"
         Title="Info Despachos" Height="423" Width="966">
     <Window.Resources>
