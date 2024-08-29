@@ -109,11 +109,6 @@ namespace PumpController
                     while (!ConectorSQLite.ComprobarCierre())
                     {
                         instancia.GrabarDespachos();
-                        StatusForm.LabelState.Dispatcher.Invoke(() =>
-                        {
-                            StatusForm.LabelState.Content = "Controlador\nOnLine";
-                            StatusForm.LabelState.Background = new SolidColorBrush(Colors.AliceBlue);
-                        });
 
                         /// Espera para procesar nuevamente
                         Thread.Sleep(loopDelaySeconds * 1000);
@@ -135,11 +130,6 @@ namespace PumpController
                 catch (Exception e)
                 {
                     _ = Log.Instance.WriteLog($"  {procesoPrincipal.Status} Error en el loop del controlador.\n\t  Excepción: {e.Message}\n", Log.LogType.t_error);
-                    StatusForm.LabelState.Dispatcher.Invoke(() =>
-                    {
-                        StatusForm.LabelState.Content = "Controlador\nDesconectado";
-                        StatusForm.LabelState.Background = new SolidColorBrush(Color.FromRgb(214, 40, 40));
-                    });
                 }
             }
         }
@@ -151,6 +141,22 @@ namespace PumpController
         public static void CheckConexion(int conexion)
         {
             _ = ConectorSQLite.Query($"UPDATE CheckConexion SET isConnected = {conexion} WHERE idConexion = 1");
+            if (conexion == 0)// conexion == 0 => exitosa
+            {
+                StatusForm.LabelState.Dispatcher.Invoke(() =>
+                {
+                    StatusForm.LabelState.Content = "Controlador\nOnLine";
+                    StatusForm.LabelState.Background = new SolidColorBrush(Colors.AliceBlue);
+                });
+            }
+            else// conexion == 1 => fallida
+            {
+                StatusForm.LabelState.Dispatcher.Invoke(() =>
+                {
+                    StatusForm.LabelState.Content = "Controlador\nDesconectado";
+                    StatusForm.LabelState.Background = new SolidColorBrush(Color.FromRgb(214, 40, 40));
+                });
+            }
         }
     }
 }

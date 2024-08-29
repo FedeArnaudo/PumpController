@@ -12,16 +12,13 @@ namespace PumpController
     {
         private readonly byte separador = 0x7E;
         private readonly string nombreDelPipe = "CEM44POSPIPE";
-        private readonly string ipControlador;
-        private readonly int protocolo;
+        private string ipControlador = Configuracion.LeerConfiguracion().IpControlador;
+        private int protocolo = Configuracion.LeerConfiguracion().Protocolo;
         private readonly CultureInfo culture;
         public ConectorCEM()
         {
             // Especifica la cultura que utiliza el punto como separador decimal
             culture = CultureInfo.InvariantCulture;
-
-            ipControlador = Configuracion.LeerConfiguracion().IpControlador;
-            protocolo = Configuracion.LeerConfiguracion().Protocolo;
         }
         public Estacion ConfiguracionDeLaEstacion()
         {
@@ -470,6 +467,7 @@ namespace PumpController
                         _ = Log.Instance.WriteLog($"  Fin de intentos...\n", Log.LogType.t_error);
                         pipeClient.Close();
                         Controlador.CheckConexion(1);
+                        ReloadData();
                     }
                     else
                     {
@@ -483,6 +481,13 @@ namespace PumpController
             }
             return buffer;
         }
+
+        private void ReloadData()
+        {
+            ipControlador = Configuracion.LeerConfiguracion().IpControlador;
+            protocolo = Configuracion.LeerConfiguracion().Protocolo;
+        }
+
         /*
          * Metodo para leer los campos variables, por ejemplo precios o cantidades.
          * El metodo para frenar la iteracion, es un valor conocido, proporcionado por el fabricante

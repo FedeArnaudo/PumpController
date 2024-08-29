@@ -83,9 +83,15 @@ namespace PumpController
         }
         private void BtnCambiarConfig_Click(object sender, RoutedEventArgs e)
         {
-            VerConfig verConfig = new VerConfig();
+            VerConfig verConfig = new VerConfig
+            {
+                Owner = this
+            };
+            verConfig.Closed += VerConfig_Closed;
             verConfig.Show();
-            Init();
+            Hide();
+
+            IsEnabled = false;
         }
         private void BtnVerConfigEstacion_Click(object sender, RoutedEventArgs e)
         {
