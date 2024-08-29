@@ -140,13 +140,13 @@ namespace PumpController
 
         public static void CheckConexion(int conexion)
         {
-            _ = ConectorSQLite.Query($"UPDATE CheckConexion SET isConnected = {conexion} WHERE idConexion = 1");
+            _ = ConectorSQLite.Query($"UPDATE CheckConexion SET isConnected = {conexion}, fecha = datetime('now', 'localtime') WHERE idConexion = 1");
             if (conexion == 0)// conexion == 0 => exitosa
             {
                 StatusForm.LabelState.Dispatcher.Invoke(() =>
                 {
                     StatusForm.LabelState.Content = "Controlador\nOnLine";
-                    StatusForm.LabelState.Background = new SolidColorBrush(Colors.AliceBlue);
+                    StatusForm.LabelState.Background = new SolidColorBrush(Colors.ForestGreen);
                 });
             }
             else// conexion == 1 => fallida

@@ -457,21 +457,17 @@ namespace PumpController
                                           retries++;
                                       }).ExecuteAndCapture(() =>
                                       {
-                                          pipeClient.Connect();
+                                          pipeClient.Connect(5000);
                                           pipeClient.Write(comando, 0, comando.Length);
                                           buffer = new byte[pipeClient.OutBufferSize];
                                           _ = pipeClient.Read(buffer, 0, buffer.Length);
                                       });
+                    Controlador.CheckConexion((int)policyResult.Outcome);
                     if (policyResult.Outcome != 0)
                     {
                         _ = Log.Instance.WriteLog($"  Fin de intentos...\n", Log.LogType.t_error);
                         pipeClient.Close();
-                        Controlador.CheckConexion(1);
                         ReloadData();
-                    }
-                    else
-                    {
-                        Controlador.CheckConexion(0);
                     }
                 }
                 catch (Exception e)
