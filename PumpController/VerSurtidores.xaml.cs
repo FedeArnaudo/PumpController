@@ -13,7 +13,7 @@ namespace PumpController
         public VerSurtidores()
         {
             InitializeComponent();
-            Icon = new BitmapImage(new Uri("pack://application:,,,/PumpController;component/LogoSiges.ico"));
+            Icon = new BitmapImage(new Uri("pack://application:,,,/PumpController;component/Images/LogoSurtidor.ico"));
             List<ConfigEstacion> infoSurtidors = MostrarConfiguracion();
             DataGridDatos.ItemsSource = infoSurtidors;
         }

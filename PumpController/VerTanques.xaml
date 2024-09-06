@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PumpController"
         mc:Ignorable="d" ResizeMode="NoResize"
+        Icon="Images/LogoSurtidor.ico"
         Title="Tanques" Height="423" Width="446">
     <Window.Resources>
         <!--#region ButtonStyle-->

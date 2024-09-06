@@ -62,19 +62,31 @@ namespace PumpController
                     switch (producto.NumeroDeProducto)
                     {
                         case 1:
-                            producto.Descripcion = "SUPER";
+                            producto.Descripcion = "NAFTA SUPER";
+                            break;
+                        case 2:
+                            producto.Descripcion = "NAFTA NORMAL";
                             break;
                         case 3:
                             producto.Descripcion = "ULTRA DIESEL";
                             break;
                         case 4:
-                            producto.Descripcion = "INFINIA";
+                            producto.Descripcion = "NAFTA INFINIA";
+                            break;
+                        case 5:
+                            producto.Descripcion = "KEROSENE";
                             break;
                         case 6:
                             producto.Descripcion = "INFINIA DIESEL";
                             break;
+                        case 7:
+                            producto.Descripcion = "GNC";
+                            break;
                         case 8:
                             producto.Descripcion = "DIESEL 500";
+                            break;
+                        case 9:
+                            producto.Descripcion = "AZUL-32";
                             break;
                         default:
                             producto.Descripcion = "N/Utilizado";

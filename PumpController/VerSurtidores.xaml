@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PumpController"
-        Icon="LogoSiges.ico"
+        Icon="Images/LogoSurtidor.ico"
         mc:Ignorable="d"
         Title="Info Surtidores" Height="599" Width="646" ResizeMode="NoResize">
     <Window.Resources>

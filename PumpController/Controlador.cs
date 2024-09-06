@@ -10,8 +10,7 @@ namespace PumpController
     {
         // Instancia de Singleton
         private static Controlador instancia = null;
-        // Hilo para manejar el proceso principal de consulta al controlador en paralelo
-        // al resto de la ejecución
+        // Hilo para manejar el proceso principal de consulta al controlador en paralelo al resto de la ejecución
         private static Task procesoPrincipal = null;
         //private static 
 
