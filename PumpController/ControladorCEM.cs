@@ -19,7 +19,6 @@ namespace PumpController
             try
             {
                 List<Surtidor> tempSurtidores = estacion.NivelesDePrecio[0];
-                int numeroDeManguera = 1;
                 foreach (Surtidor surtidor in tempSurtidores)
                 {
                     string campos = "IdSurtidor,Manguera,Producto,Precio,DescProd";
@@ -43,8 +42,7 @@ namespace PumpController
                                 manguera.Producto.Descripcion,
                                 surtidor.NumeroDeSurtidor,
                                 manguera.NumeroDeManguera));
-                        _ = Log.Instance.WriteLog(string.Format("SURT: ({0}) Cem44: ({1}) Desc: ({2})", numeroDeManguera, surtidor.NumeroDeSurtidor + manguera.NumeroDeManguera, manguera.Producto.Descripcion), Log.LogType.t_info);
-                        numeroDeManguera++;
+                        _ = Log.Instance.WriteLog(string.Format("SURT: ({0}) MANG: ({1}) DESC: ({2})", surtidor.NumeroDeSurtidor, manguera.NumeroDeManguera, manguera.Producto.Descripcion), Log.LogType.t_info);
                     }
                 }
             }
@@ -75,7 +73,7 @@ namespace PumpController
                             total.ToString(CultureInfo.InvariantCulture));
                         _ = ConectorSQLite.Query(string.Format("INSERT INTO Tanques ({0}) VALUES ({1})", campos, rows));
                     }
-                    _ = Log.Instance.WriteLog(string.Format("Tanque ({0}) Capacidad Maxima ({1}) Cantidad Actual ({2})", i, total, tanques[i].VolumenProductoT), Log.LogType.t_info);
+                    _ = Log.Instance.WriteLog(string.Format("Tanque ({0}) Capacidad Maxima ({1}) Cantidad Actual ({2})", tanques[i].NumeroDeTanque, total, tanques[i].VolumenProductoT), Log.LogType.t_info);
                 }
             }
             catch (Exception e)

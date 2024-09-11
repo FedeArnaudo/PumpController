@@ -205,6 +205,11 @@ namespace PumpController
 
             Despacho despachoTemp = new Despacho();
 
+            if ((protocolo == 16 && numeroDeSurtidor == 16) || (protocolo == 32 && numeroDeSurtidor == 32))
+            {
+                numeroDeSurtidor = 0;
+            }
+
             byte[] respuesta = Log.Instance.GetLogLevel().Equals(Log.LogType.t_debug) ? LeerArchivo("despacho-" + numeroDeSurtidor) : EnviarComando(new byte[] { (byte)(mensaje[0] + Convert.ToByte(numeroDeSurtidor)) });
             try
             {
