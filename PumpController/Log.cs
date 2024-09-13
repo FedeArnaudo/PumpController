@@ -52,8 +52,8 @@ namespace PumpController
                     _ = Directory.CreateDirectory(path);
                 }
 
-                // Delete 1 days old log
-                string deleteFile = "log" + DateTime.Now.Subtract(new TimeSpan(1, 0, 0, 0)).ToString("dd-MM-yyyy") + ".txt";
+                // Delete 2 days old log
+                string deleteFile = "log" + DateTime.Now.Subtract(new TimeSpan(2, 0, 0, 0)).ToString("dd-MM-yyyy") + ".txt";
                 if (File.Exists(Environment.CurrentDirectory + "/Log/" + deleteFile))
                 {
                     File.Delete(Environment.CurrentDirectory + "/Log/" + deleteFile);

@@ -9,9 +9,11 @@ namespace PumpController
     internal class ControladorCEM : Controlador
     {
         private readonly ConectorCEM conectorCEM;
+        private ICierres cierres;
         public ControladorCEM()
         {
             conectorCEM = new ConectorCEM();
+            cierres = new GrabarCierreActual();
         }
         public override void GrabarConfigEstacion()
         {
@@ -81,87 +83,19 @@ namespace PumpController
                 throw new Exception("Error en el método GrabarTanques.\nExcepción: " + e.Message);
             }
         }
-        public override void GrabarTurnoEnCurso()
-        {
-            _ = Log.Instance.WriteLog($"Iniciando pedido de informacion del turno actual.\n", Log.LogType.t_info);
-            CierreDeTurno turnoEnCurso = conectorCEM.InfoTurnoEnCurso();
-            GrabarTurno(turnoEnCurso);
-        }
         public override void GrabarCierreDeTurno()
         {
             _ = Log.Instance.WriteLog($"\nIniciando pedido de informacion del cierre de turno actual.\n", Log.LogType.t_info);
-            CierreDeTurno cierreDeTurno = conectorCEM.InfoCierreDeTurno();
-            GrabarTurno(cierreDeTurno);
+            Cierres.GrabarTurno(conectorCEM);
         }
         public override void GrabarCierreAnterior()
         {
             _ = Log.Instance.WriteLog($"Iniciando pedido de informacion del cierre de turno anterior.\n", Log.LogType.t_info);
-            CierreDeTurno cierreAnterior = conectorCEM.InfoCierreDeTurnoAnterior();
-            GrabarTurno(cierreAnterior);
+            Cierres = new GrabarCierreAnterior();
+            Cierres.GrabarTurno(conectorCEM);
+            Cierres = new GrabarCierreActual();
         }
-        public void GrabarTurno(CierreDeTurno turno)
-        {
-            _ = ConectorSQLite.Query("UPDATE cierreBandera SET hacerCierre = 0 WHERE hacerCierre = 1");
-            if (!turno.TurnoSinVentas)
-            {
-                try
-                {
-                    string query = "INSERT INTO Cierres (monto_contado, volumen_contado, monto_YPFruta, volumen_YPFruta) VALUES ({0})";
-                    string row = string.Format(
-                        "'{0}','{1}','{2}','{3}'",
-                        turno.TotalesMediosDePago[0].TotalMonto.ToString(CultureInfo.InvariantCulture),
-                        turno.TotalesMediosDePago[0].TotalVolumen.ToString(CultureInfo.InvariantCulture),
-                        turno.TotalesMediosDePago[3].TotalMonto.ToString(CultureInfo.InvariantCulture),
-                        turno.TotalesMediosDePago[3].TotalVolumen.ToString(CultureInfo.InvariantCulture));
 
-                    _ = ConectorSQLite.Query(string.Format(query, row));
-
-                    // Traer ID del cierre para poder referenciar los detalles
-                    DataTable table = ConectorSQLite.Dt_query("SELECT max(id) FROM Cierres");
-
-                    int id = Convert.ToInt32(table.Rows[0][0]);
-
-                    // Grabar CierresPorProducto
-                    query = "INSERT INTO CierresPorProducto (id, producto, monto, volumen) VALUES (" + id + ", {0})";
-                    for (int i = 0; i < turno.TotalesPorProductosPorNivelesPorPeriodo[0][0].Count; i++)
-                    {
-                        string aux =
-                            (i + 1).ToString() + "," +
-                            "'" + turno.TotalesPorProductosPorNivelesPorPeriodo[0][0][i].TotalMonto + "'," +
-                            "'" + turno.TotalesPorProductosPorNivelesPorPeriodo[0][0][i].TotalVolumen + "'";
-
-                        _ = ConectorSQLite.Query(string.Format(query, aux));
-                    }
-
-                    // Grabar CierresPorManguera
-                    Estacion estacion = Estacion.InstanciaEstacion;
-                    int contador = 0;
-
-                    query = "INSERT INTO CierresPorManguera (id, surtidor, manguera, monto, volumen) VALUES (" + id + ", {0})";
-                    for (int i = 0; i < estacion.NumeroDeSurtidores; i++)
-                    {
-                        List<Surtidor> surtidores = estacion.NivelesDePrecio[0];
-                        for (int j = 0; j < surtidores[i].TipoDeSurtidor; j++)
-                        {
-                            string aux =
-                                (i + 1).ToString() + "," +
-                                (j + 1).ToString() + "," +
-                                "'" + turno.TotalPorMangueras[contador].TotalVntasMonto + "'," +
-                                "'" + turno.TotalPorMangueras[contador].TotalVntasVolumen + "'";
-
-                            contador++;
-
-                            _ = ConectorSQLite.Query(string.Format(query, aux));
-                        }
-                    }
-                    _ = ConectorSQLite.Query("DELETE FROM despachos");
-                }
-                catch (Exception e)
-                {
-                    throw new Exception($"Error en el metodo GrabarTurno. Excepcion: {e.Message}");
-                }
-            }
-        }
         /*
          * Metodo para procesar la informacion que traer el CEM y la guarda en la base
          */
@@ -172,8 +106,9 @@ namespace PumpController
                 Despacho despacho = conectorCEM.InfoSurtidor(i);
                 try
                 {
-                    if (despacho.StatusUltimaVenta == Despacho.ESTADO_SURTIDOR.DESPACHANDO || despacho.StatusUltimaVenta == Despacho.ESTADO_SURTIDOR.DETENIDO
-                                                           || despacho.NroUltimaVenta == 0 || despacho.IdUltimaVenta == 0)
+                    if (despacho == null || despacho.StatusUltimaVenta == Despacho.ESTADO_SURTIDOR.DESPACHANDO ||
+                        despacho.StatusUltimaVenta == Despacho.ESTADO_SURTIDOR.DETENIDO || despacho.NroUltimaVenta == 0 ||
+                        despacho.IdUltimaVenta == 0)
                     {
                         continue;
                     }
@@ -390,6 +325,230 @@ namespace PumpController
             catch (Exception e)
             {
                 throw new Exception($"Error en el metodo GrabarProductos. Excepcion: {e}");
+            }
+        }
+
+        public override void GrabarTurnoEnCurso()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICierres Cierres
+        {
+            get => cierres;
+            set
+            {
+                if (cierres != value)
+                {
+                    cierres = value;
+                }
+            }
+        }
+    }
+
+    internal interface ICierres
+    {
+        void GrabarTurno(ConectorCEM conectorCEM);
+    }
+
+    internal class GrabarCierreAnterior : ICierres
+    {
+        public void GrabarTurno(ConectorCEM conectorCEM)
+        {
+            CierreDeTurno turno = conectorCEM.InfoCierreDeTurnoAnterior();
+            if (!turno.TurnoSinVentas)
+            {
+                try
+                {
+
+                    string query = $"UPDATE Cierres " +
+                                   $"SET monto_contado = {turno.TotalesMediosDePago[0].TotalMonto.ToString(CultureInfo.InvariantCulture)}, " +
+                                       $"volumen_contado = {turno.TotalesMediosDePago[0].TotalVolumen.ToString(CultureInfo.InvariantCulture)}, " +
+                                       $"monto_YPFruta = {turno.TotalesMediosDePago[3].TotalMonto.ToString(CultureInfo.InvariantCulture)}, " +
+                                       $"volumen_YPFruta = {turno.TotalesMediosDePago[3].TotalVolumen.ToString(CultureInfo.InvariantCulture)} " +
+                                   $"WHERE id = (SELECT MAX(id) FROM Cierres)";
+
+                    _ = ConectorSQLite.Query(string.Format(query));
+
+                    // Traer ID del cierre para poder referenciar los detalles
+                    DataTable table = ConectorSQLite.Dt_query("SELECT max(id) FROM Cierres");
+
+                    int id = Convert.ToInt32(table.Rows[0][0]);
+
+                    // Grabar CierresPorManguera
+                    Estacion estacion = Estacion.InstanciaEstacion;
+                    int contador = 0;
+
+                    for (int i = 0; i < estacion.NumeroDeSurtidores; i++)
+                    {
+                        List<Surtidor> surtidores = estacion.NivelesDePrecio[0];
+                        for (int j = 0; j < surtidores[i].TipoDeSurtidor; j++)
+                        {
+                            query = "UPDATE CierresPorManguera " +
+                                   $"SET monto = {turno.TotalPorMangueras[contador].TotalVntasMonto}, " +
+                                       $"volumen = {turno.TotalPorMangueras[contador].TotalVntasVolumen} " +
+                                   $"WHERE id = {id} AND surtidor = {i + 1} AND manguera = {j + 1}";
+
+                            if (ConectorSQLite.Query(string.Format(query)) != 1)
+                            {
+                                query = "INSERT INTO CierresPorManguera (id, surtidor, manguera, monto, volumen) " +
+                                       $"VALUES ({id}, {i + 1}, {j + 1},{turno.TotalPorMangueras[contador].TotalVntasMonto}, {turno.TotalPorMangueras[contador].TotalVntasVolumen})";
+                                _ = ConectorSQLite.Query(string.Format(query));
+                            }
+
+                            contador++;
+                        }
+                    }
+
+                    // Grabar CierresPorProducto
+                    for (int i = 0; i < turno.TotalesPorProductosPorNivelesPorPeriodo[0][0].Count; i++)
+                    {
+                        query = $"UPDATE CierresPorProducto " +
+                                $"SET monto = {turno.TotalesPorProductosPorNivelesPorPeriodo[0][0][i].TotalMonto}, " +
+                                    $"volumen = {turno.TotalesPorProductosPorNivelesPorPeriodo[0][0][i].TotalVolumen} " +
+                                $"WHERE id = {id} AND producto = {i + 1}";
+
+                        if (ConectorSQLite.Query(string.Format(query)) != 1)
+                        {
+                            query = "INSERT INTO CierresPorManguera (id, producto, monto, volumen) " +
+                                   $"VALUES ({id}, {i + 1}, {turno.TotalesPorProductosPorNivelesPorPeriodo[0][0][i].TotalMonto}, {turno.TotalesPorProductosPorNivelesPorPeriodo[0][0][i].TotalVolumen})";
+                            _ = ConectorSQLite.Query(string.Format(query));
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Error en el metodo GrabarTurno. Excepcion: {e.Message}");
+                }
+            }
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class GrabarCierreActual : ICierres
+    {
+        public void GrabarTurno(ConectorCEM conectorCEM)
+        {
+            CierreDeTurno turno = conectorCEM.InfoCierreDeTurnoActual();
+            _ = ConectorSQLite.Query("UPDATE cierreBandera SET hacerCierre = 0 WHERE hacerCierre = 1");
+
+            if (!turno.TurnoSinVentas)
+            {
+                try
+                {
+                    string query = "INSERT INTO Cierres (monto_contado, volumen_contado, monto_YPFruta, volumen_YPFruta) VALUES ({0})";
+                    string row = string.Format(
+                        "'{0}','{1}','{2}','{3}'",
+                        turno.TotalesMediosDePago[0].TotalMonto.ToString(CultureInfo.InvariantCulture),
+                        turno.TotalesMediosDePago[0].TotalVolumen.ToString(CultureInfo.InvariantCulture),
+                        turno.TotalesMediosDePago[3].TotalMonto.ToString(CultureInfo.InvariantCulture),
+                        turno.TotalesMediosDePago[3].TotalVolumen.ToString(CultureInfo.InvariantCulture));
+
+                    _ = ConectorSQLite.Query(string.Format(query, row));
+
+                    // Traer ID del cierre para poder referenciar los detalles
+                    DataTable table = ConectorSQLite.Dt_query("SELECT max(id) FROM Cierres");
+
+                    int id = Convert.ToInt32(table.Rows[0][0]);
+
+                    // Grabar CierresPorProducto
+                    query = "INSERT INTO CierresPorProducto (id, producto, monto, volumen) VALUES (" + id + ", {0})";
+                    for (int i = 0; i < turno.TotalesPorProductosPorNivelesPorPeriodo[0][0].Count; i++)
+                    {
+                        string aux =
+                            (i + 1).ToString() + "," +
+                            "'" + turno.TotalesPorProductosPorNivelesPorPeriodo[0][0][i].TotalMonto + "'," +
+                            "'" + turno.TotalesPorProductosPorNivelesPorPeriodo[0][0][i].TotalVolumen + "'";
+
+                        _ = ConectorSQLite.Query(string.Format(query, aux));
+                    }
+
+                    // Grabar CierresPorManguera
+                    Estacion estacion = Estacion.InstanciaEstacion;
+                    int contador = 0;
+
+                    query = "INSERT INTO CierresPorManguera (id, surtidor, manguera, monto, volumen) VALUES (" + id + ", {0})";
+                    for (int i = 0; i < estacion.NumeroDeSurtidores; i++)
+                    {
+                        List<Surtidor> surtidores = estacion.NivelesDePrecio[0];
+                        for (int j = 0; j < surtidores[i].TipoDeSurtidor; j++)
+                        {
+                            string aux =
+                                (i + 1).ToString() + "," +
+                                (j + 1).ToString() + "," +
+                                "'" + turno.TotalPorMangueras[contador].TotalVntasMonto + "'," +
+                                "'" + turno.TotalPorMangueras[contador].TotalVntasVolumen + "'";
+
+                            contador++;
+
+                            _ = ConectorSQLite.Query(string.Format(query, aux));
+                        }
+                    }
+                    _ = ConectorSQLite.Query("DELETE FROM despachos");
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Error en el metodo GrabarTurno. Excepcion: {e.Message}");
+                }
+            }
+            else
+            {
+                try
+                {
+                    string query = "INSERT INTO Cierres (monto_contado, volumen_contado, monto_YPFruta, volumen_YPFruta) VALUES ({0})";
+                    string row = string.Format(
+                        "'{0}','{1}','{2}','{3}'",
+                        turno.TotalesMediosDePago[0].TotalMonto = 0,
+                        turno.TotalesMediosDePago[0].TotalVolumen = 0,
+                        turno.TotalesMediosDePago[3].TotalMonto = 0,
+                        turno.TotalesMediosDePago[3].TotalVolumen = 0);
+
+                    _ = ConectorSQLite.Query(string.Format(query, row));
+
+                    // Traer ID del cierre para poder referenciar los detalles
+                    DataTable table = ConectorSQLite.Dt_query("SELECT max(id) FROM Cierres");
+
+                    int id = Convert.ToInt32(table.Rows[0][0]);
+
+                    // Grabar CierresPorProducto
+                    query = "INSERT INTO CierresPorProducto (id, producto, monto, volumen) VALUES (" + id + ", {0})";
+                    for (int i = 0; i < turno.TotalesPorProductosPorNivelesPorPeriodo[0][0].Count; i++)
+                    {
+                        string aux =
+                            (i + 1).ToString() + "," +
+                            "'" + 0.00 + "'," +
+                            "'" + 0.00 + "'";
+
+                        _ = ConectorSQLite.Query(string.Format(query, aux));
+                    }
+
+                    // Grabar CierresPorManguera
+                    Estacion estacion = Estacion.InstanciaEstacion;
+                    int contador = 0;
+
+                    query = "INSERT INTO CierresPorManguera (id, surtidor, manguera, monto, volumen) VALUES (" + id + ", {0})";
+                    for (int i = 0; i < estacion.NumeroDeSurtidores; i++)
+                    {
+                        List<Surtidor> surtidores = estacion.NivelesDePrecio[0];
+                        for (int j = 0; j < surtidores[i].TipoDeSurtidor; j++)
+                        {
+                            string aux =
+                                (i + 1).ToString() + "," +
+                                (j + 1).ToString() + "," +
+                                "'" + 0.00 + "'," +
+                                "'" + 0.00 + "'";
+
+                            contador++;
+
+                            _ = ConectorSQLite.Query(string.Format(query, aux));
+                        }
+                    }
+                    _ = ConectorSQLite.Query("DELETE FROM despachos");
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Error en el metodo GrabarTurno. Excepcion: {e.Message}");
+                }
             }
         }
     }

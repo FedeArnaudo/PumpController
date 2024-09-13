@@ -127,6 +127,9 @@
     <Compile Include="EstructuraDeDatos.cs" />
     <Compile Include="IShowInfo.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="VerCierres.xaml.cs">
+      <DependentUpon>VerCierres.xaml</DependentUpon>
+    </Compile>
     <Compile Include="VerConfig.xaml.cs">
       <DependentUpon>VerConfig.xaml</DependentUpon>
     </Compile>
@@ -157,6 +160,10 @@
       <DependentUpon>StatusForm.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="VerCierres.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="VerConfig.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

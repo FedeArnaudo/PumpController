@@ -25,6 +25,7 @@ namespace PumpController
             InitializeComponent();
             Icon = new BitmapImage(new Uri("pack://application:,,,/PumpController;component/Images/LogoSurtidor.ico"));
             SetupNotifyIcon();
+            BtnCierre_Anterior.Visibility = Visibility.Hidden;
             Loaded += new RoutedEventHandler(StatusForm_Load);
         }
         private void StatusForm_Load(object sender, EventArgs e)
@@ -97,6 +98,11 @@ namespace PumpController
         {
             VerProductos verProductos = new VerProductos();
             verProductos.Show();
+        }
+        private void BtnVerCierres_Click(object sender, RoutedEventArgs e)
+        {
+            VerCierres verCierres = new VerCierres();
+            verCierres.Show();
         }
         private void SetupNotifyIcon()
         {
@@ -213,19 +219,9 @@ namespace PumpController
             // Combinación de teclas Ctrl + Shift + E
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
-                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                if (e.Key == Key.E)
                 {
-                    if (e.Key == Key.E)
-                    {
-                        if (BtnCierre_Anterior.Visibility == Visibility.Visible)
-                        {
-                            BtnCierre_Anterior.Visibility = Visibility.Hidden;
-                        }
-                        else
-                        {
-                            BtnCierre_Anterior.Visibility = Visibility.Visible;
-                        }
-                    }
+                    BtnCierre_Anterior.Visibility = BtnCierre_Anterior.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
                 }
             }
         }

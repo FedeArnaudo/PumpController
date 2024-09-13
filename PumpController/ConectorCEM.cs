@@ -211,119 +211,124 @@ namespace PumpController
             }
 
             byte[] respuesta = Log.Instance.GetLogLevel().Equals(Log.LogType.t_debug) ? LeerArchivo("despacho-" + numeroDeSurtidor) : EnviarComando(new byte[] { (byte)(mensaje[0] + Convert.ToByte(numeroDeSurtidor)) });
-            try
+
+            if (respuesta != null && respuesta[confirmacion] == 0x0)
             {
-                if (respuesta == null || respuesta[confirmacion] != 0x0)
+                try
                 {
-                    throw new Exception("No se recibió mensaje de confirmación al solicitar info del surtidor.");
-                }
-                if (!File.Exists(Environment.CurrentDirectory + $"/despacho-{numeroDeSurtidor}.txt"))
-                {
-                    GuardarRespuesta(respuesta, $"despacho-{numeroDeSurtidor}.txt");
-                }
+                    if (!File.Exists(Environment.CurrentDirectory + $"/despacho-{numeroDeSurtidor}.txt"))
+                    {
+                        GuardarRespuesta(respuesta, $"despacho-{numeroDeSurtidor}.txt");
+                    }
 
-                // Proceso ultima venta
-                byte statusUltimaVenta = respuesta[status];
+                    // Proceso ultima venta
+                    byte statusUltimaVenta = respuesta[status];
 
-                bool despachando = false;
-                bool detenido = false;
+                    bool despachando = false;
+                    bool detenido = false;
 
-                switch (statusUltimaVenta)
-                {
-                    case 0x01:
-                        despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.DISPONIBLE;
-                        break;
-                    case 0x02:
-                        despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.EN_SOLICITUD;
-                        break;
-                    case 0x03:
-                        despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.DESPACHANDO;
-                        despachando = true;
-                        break;
-                    case 0x04:
-                        despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.AUTORIZADO;
-                        break;
-                    case 0x05:
-                        despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.VENTA_FINALIZADA_IMPAGA;
-                        break;
-                    case 0x08:
-                        despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.DEFECTUOSO;
-                        break;
-                    case 0x09:
-                        despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.ANULADO;
-                        break;
-                    case 0x0A:
-                        despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.DETENIDO;
-                        detenido = true;
-                        break;
-                    default:
-                        break;
-                }
+                    switch (statusUltimaVenta)
+                    {
+                        case 0x01:
+                            despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.DISPONIBLE;
+                            break;
+                        case 0x02:
+                            despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.EN_SOLICITUD;
+                            break;
+                        case 0x03:
+                            despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.DESPACHANDO;
+                            despachando = true;
+                            break;
+                        case 0x04:
+                            despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.AUTORIZADO;
+                            break;
+                        case 0x05:
+                            despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.VENTA_FINALIZADA_IMPAGA;
+                            break;
+                        case 0x08:
+                            despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.DEFECTUOSO;
+                            break;
+                        case 0x09:
+                            despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.ANULADO;
+                            break;
+                        case 0x0A:
+                            despachoTemp.StatusUltimaVenta = Despacho.ESTADO_SURTIDOR.DETENIDO;
+                            detenido = true;
+                            break;
+                        default:
+                            break;
+                    }
 
-                int posicion = codigo_producto + 1;
+                    int posicion = codigo_producto + 1;
 
-                if (despachando || detenido)
-                {
-                    despachoTemp.NroUltimaVenta = 0;
-                    despachoTemp.ProductoUltimaVenta = 0;
-                    despachoTemp.MontoUltimaVenta = 0;
-                    despachoTemp.VolumenUltimaVenta = 0;
-                    despachoTemp.PpuUltimaVenta = 0;
-                    despachoTemp.UltimaVentaFacturada = false;
-                    despachoTemp.IdUltimaVenta = 0;
-                    posicion = status + 1;
-                }
-                else
-                {
-                    despachoTemp.NroUltimaVenta = respuesta[nro_venta];
-                    despachoTemp.ProductoUltimaVenta = respuesta[codigo_producto];
-                    despachoTemp.MontoUltimaVenta = ConvertDouble(LeerCampoVariable(respuesta, ref posicion));
-                    despachoTemp.VolumenUltimaVenta = ConvertDouble(LeerCampoVariable(respuesta, ref posicion));
-                    despachoTemp.PpuUltimaVenta = ConvertDouble(LeerCampoVariable(respuesta, ref posicion));
-                    despachoTemp.UltimaVentaFacturada = Convert.ToBoolean(respuesta[posicion]);
+                    if (despachando || detenido)
+                    {
+                        despachoTemp.NroUltimaVenta = 0;
+                        despachoTemp.ProductoUltimaVenta = 0;
+                        despachoTemp.MontoUltimaVenta = 0;
+                        despachoTemp.VolumenUltimaVenta = 0;
+                        despachoTemp.PpuUltimaVenta = 0;
+                        despachoTemp.UltimaVentaFacturada = false;
+                        despachoTemp.IdUltimaVenta = 0;
+                        posicion = status + 1;
+                    }
+                    else
+                    {
+                        despachoTemp.NroUltimaVenta = respuesta[nro_venta];
+                        despachoTemp.ProductoUltimaVenta = respuesta[codigo_producto];
+                        despachoTemp.MontoUltimaVenta = ConvertDouble(LeerCampoVariable(respuesta, ref posicion));
+                        despachoTemp.VolumenUltimaVenta = ConvertDouble(LeerCampoVariable(respuesta, ref posicion));
+                        despachoTemp.PpuUltimaVenta = ConvertDouble(LeerCampoVariable(respuesta, ref posicion));
+                        despachoTemp.UltimaVentaFacturada = Convert.ToBoolean(respuesta[posicion]);
+                        posicion++;
+                        despachoTemp.IdUltimaVenta = Convert.ToInt32(LeerCampoVariable(respuesta, ref posicion));
+                    }
+
+                    //Proceso venta anterior
+                    byte statusVentaAnterior = respuesta[posicion];
+                    switch (statusVentaAnterior)
+                    {
+                        case 0x01:
+                            despachoTemp.StatusVentaAnterior = Despacho.ESTADO_SURTIDOR.DISPONIBLE;
+                            break;
+                        case 0x05:
+                            despachoTemp.StatusVentaAnterior = Despacho.ESTADO_SURTIDOR.VENTA_FINALIZADA_IMPAGA;
+                            break;
+                        default:
+                            break;
+                    }
                     posicion++;
-                    despachoTemp.IdUltimaVenta = Convert.ToInt32(LeerCampoVariable(respuesta, ref posicion));
-                }
 
-                //Proceso venta anterior
-                byte statusVentaAnterior = respuesta[posicion];
-                switch (statusVentaAnterior)
+                    despachoTemp.NroVentaAnterior = respuesta[posicion];
+                    posicion++;
+
+                    despachoTemp.ProductoVentaAnterior = respuesta[posicion];
+                    posicion++;
+
+                    despachoTemp.MontoVentaAnterior = ConvertDouble(LeerCampoVariable(respuesta, ref posicion));
+                    despachoTemp.VolumenVentaAnterios = ConvertDouble(LeerCampoVariable(respuesta, ref posicion));
+                    despachoTemp.PpuVentaAnterior = ConvertDouble(LeerCampoVariable(respuesta, ref posicion));
+                    despachoTemp.VentaAnteriorFacturada = Convert.ToBoolean(respuesta[posicion]);
+                    posicion++;
+
+                    despachoTemp.IdVentaAnterior = despachando || detenido ? 0 : Convert.ToInt32(LeerCampoVariable(respuesta, ref posicion));
+                }
+                catch (Exception e)
                 {
-                    case 0x01:
-                        despachoTemp.StatusVentaAnterior = Despacho.ESTADO_SURTIDOR.DISPONIBLE;
-                        break;
-                    case 0x05:
-                        despachoTemp.StatusVentaAnterior = Despacho.ESTADO_SURTIDOR.VENTA_FINALIZADA_IMPAGA;
-                        break;
-                    default:
-                        break;
+                    throw new Exception("\nError al obtener informacion del despacho.\n\tExcepcion: " + e.Message);
                 }
-                posicion++;
-
-                despachoTemp.NroVentaAnterior = respuesta[posicion];
-                posicion++;
-
-                despachoTemp.ProductoVentaAnterior = respuesta[posicion];
-                posicion++;
-
-                despachoTemp.MontoVentaAnterior = ConvertDouble(LeerCampoVariable(respuesta, ref posicion));
-                despachoTemp.VolumenVentaAnterios = ConvertDouble(LeerCampoVariable(respuesta, ref posicion));
-                despachoTemp.PpuVentaAnterior = ConvertDouble(LeerCampoVariable(respuesta, ref posicion));
-                despachoTemp.VentaAnteriorFacturada = Convert.ToBoolean(respuesta[posicion]);
-                posicion++;
-
-                despachoTemp.IdVentaAnterior = despachando || detenido ? 0 : Convert.ToInt32(LeerCampoVariable(respuesta, ref posicion));
             }
-            catch (Exception e)
+            else
             {
-                throw new Exception("\nError al obtener informacion del despacho.\n\tExcepcion: " + e.Message);
+                _ = Log.Instance.WriteLog("No se recibieron datos al solicitar información del surtidor.", Log.LogType.t_warning);
+                despachoTemp = null;
             }
             return despachoTemp;
         }
-        public CierreDeTurno InfoCierreDeTurno()
+        public CierreDeTurno InfoCierreDeTurnoActual()
         {
             byte[] mensaje = new byte[] { 0x07 };  //Comando para pedir la informacion del corte de turno actual
-            byte[] respuesta = Log.Instance.GetLogLevel().Equals(Log.LogType.t_debug) ? LeerArchivo("turnoEnCurso") : EnviarComando(mensaje);
+            byte[] respuesta = Log.Instance.GetLogLevel().Equals(Log.LogType.t_debug) ? LeerArchivo("Cierre") : EnviarComando(mensaje);
 
             CierreDeTurno cierreDeTurno = InfoTurno(respuesta);
 
@@ -332,7 +337,7 @@ namespace PumpController
         public CierreDeTurno InfoTurnoEnCurso()
         {
             byte[] mensaje = new byte[] { 0x08 };  //Comando para pedir la informacion del turno en curso
-            byte[] respuesta = EnviarComando(mensaje);
+            byte[] respuesta = Log.Instance.GetLogLevel().Equals(Log.LogType.t_debug) ? LeerArchivo("Cierre") : EnviarComando(mensaje);
 
             CierreDeTurno turnoEnCurso = InfoTurno(respuesta);
 
@@ -341,7 +346,7 @@ namespace PumpController
         public CierreDeTurno InfoCierreDeTurnoAnterior()
         {
             byte[] mensaje = new byte[] { 0x0B };  //Comando para pedir la informacion del corte de turno anterior
-            byte[] respuesta = EnviarComando(mensaje);
+            byte[] respuesta = Log.Instance.GetLogLevel().Equals(Log.LogType.t_debug) ? LeerArchivo("Cierre") : EnviarComando(mensaje);
 
             CierreDeTurno cierreDeTurnoAnterior = InfoTurno(respuesta);
 
@@ -465,7 +470,7 @@ namespace PumpController
                     int retries = 1;
 
                     PolicyResult policyResult = Policy.Handle<Exception>()
-                        .WaitAndRetry(retryCount: 5,
+                        .WaitAndRetry(retryCount: 6,
                                       sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
                                       onRetry: (exception, TimeSpan, conttext) =>
                                       {

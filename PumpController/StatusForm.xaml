@@ -87,9 +87,11 @@
                 <RowDefinition Height="10"></RowDefinition>
             </Grid.RowDefinitions>
             <!--#endregion-->
+            <!--#region TEXT BLOCK-->
             <TextBlock Grid.Column="1" Grid.Row="6"
                        Height="14" Width="18" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,0"
                        Text="CIO" FontSize="11"></TextBlock>
+            <!--#endregion-->
             <!--#region BUTTON-->
             <Button Grid.Row="1" Grid.Column="1" Width="160" Height="35" Background="#007ED6" BorderBrush="#007ED6"
                     HorizontalAlignment="Center" VerticalAlignment="Center"
@@ -122,9 +124,15 @@
                     Style="{DynamicResource ButtonStyle}" Click="BtnVerProductos_Click">
                 <TextBlock Text="Ver Productos" Foreground="White" FontSize="15"></TextBlock>
             </Button>
+            <Button Grid.Row="4" Grid.Column="2" Width="160" Height="35" Background="#007ED6" BorderBrush="#007ED6"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Margin="0, 0, 0, 0" Name="BtnVerCierres"
+                    Style="{DynamicResource ButtonStyle}" Click="BtnVerCierres_Click">
+                <TextBlock Text="Ver Cierres" Foreground="White" FontSize="15"></TextBlock>
+            </Button>
             <Button Grid.Row="5" Grid.Column="2" Width="105" Height="35" Background="#988E9F"
                     HorizontalAlignment="Center" VerticalAlignment="Center"
-                    Margin="0,0,0,0" x:Name="BtnCierre_Anterior" Visibility="Hidden"
+                    Margin="0,0,0,0" x:Name="BtnCierre_Anterior" Visibility="Visible"
                     Style="{DynamicResource ButtonStyle}" Click="BtnCierre_Anterior_Click">
                 <TextBlock Text="Cierre Anterior" Foreground="White" FontSize="15"/>
             </Button>
@@ -141,21 +149,24 @@
                     <ColumnDefinition Width="280"/>
                     <ColumnDefinition Width="90"/>
                 </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0"
+                       Height="26" Width="210" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="37,0,0,0"
+                       Text="Controlador de Surtidores" FontSize="18"></TextBlock>
                 <Button Grid.Row="0" Grid.Column="1"  Width="25" Height="25" Background="#1B1448" BorderBrush="#007ED6"
                     HorizontalAlignment="Right" VerticalAlignment="Center"
-                    Margin="0,3,45,3" Name="BtnMinimizar"
+                    Margin="0,0,45,0" Name="BtnMinimizar"
                     Style="{DynamicResource ButtonStyle}" Click="BtnMinimizar_Click">
                     <TextBlock Text="-" Foreground="White" FontSize="15"></TextBlock>
                 </Button>
                 <Button Grid.Row="0" Grid.Column="1"  Width="25" Height="25" Background="#1B1448" BorderBrush="#007ED6"
                     HorizontalAlignment="Right" VerticalAlignment="Center"
-                    Margin="0,3,10,3" Name="BtnCerrar"
+                    Margin="0,0,10,0" Name="BtnCerrar"
                     Style="{DynamicResource ButtonStyle}" Click="BtnCerrar_Click">
                     <TextBlock Text="X" Foreground="White" FontSize="15"></TextBlock>
                 </Button>
                 <Image Source="pack://application:,,,/Images/LogoSurtidor.ico"
-                       Width="30" Height="30"
-                       HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"></Image>
+                       Width="27" Height="27"
+                       HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0"></Image>
             </Grid>
             <!--#endregion-->
             <!--#region LABEL-->
