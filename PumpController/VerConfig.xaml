@@ -7,7 +7,7 @@
         Icon="Images/LogoSurtidor.ico"
         mc:Ignorable="d"
         Title="Configuracion de la Estacion"
-        Height="289" Width="366"
+        Height="319" Width="366"
         WindowStartupLocation="Manual" Background="Transparent"
         PreviewKeyDown="Window_PreviewKeyDown" ResizeMode="NoResize">
     <Window.Resources>
@@ -85,6 +85,7 @@
                 <RowDefinition Height="30"></RowDefinition>
                 <RowDefinition Height="30"></RowDefinition>
                 <RowDefinition Height="30"></RowDefinition>
+                <RowDefinition Height="30"></RowDefinition>
                 <RowDefinition Height="40"></RowDefinition>
                 <RowDefinition Height="20"></RowDefinition>
             </Grid.RowDefinitions>
@@ -109,6 +110,15 @@
             <TextBlock Grid.Row="5" Grid.Column="1" Text="Protocolo"
                        Foreground="Black" FontSize="14" VerticalAlignment="Center"
                        HorizontalAlignment="Left"></TextBlock>
+            
+            <TextBlock Grid.Row="6" Grid.Column="1" Text="Tiempo entre consultas"
+                       Foreground="Black" FontSize="14" TextWrapping="Wrap"
+                       VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+            <TextBlock Grid.Row="6" Grid.Column="2" Text="segundos"
+                       Foreground="Black" FontSize="14" TextWrapping="Wrap"
+                       VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,45,0"
+                       ></TextBlock>
+            
             <TextBlock Grid.Row="5" Grid.Column="2" Text="16"
                        Foreground="Black" FontSize="14" VerticalAlignment="Center" Margin="10, 0, 0, 0"
                        HorizontalAlignment="Left"></TextBlock>
@@ -116,7 +126,7 @@
                        Foreground="Black" FontSize="14" VerticalAlignment="Center" Margin="85, 0, 0, 0"
                        HorizontalAlignment="Left"></TextBlock>
             <!--#endregion-->
-            <!--#region TextBox-->
+            <!--#region TEXT BOX-->
             <TextBox Grid.Row="2" Grid.Column="2" x:Name="TextBoxPryNuevo" Width="165"
                      TextAlignment="Left" Background="Transparent" BorderBrush="#007ED6" Height="20" FontSize="14"
                      HorizontalAlignment="Left" Margin="10, 0, 0, 0" Text=""></TextBox>
@@ -125,22 +135,31 @@
                      TextAlignment="Left" Background="Transparent" BorderBrush="#007ED6" Height="20" FontSize="14"
                      HorizontalAlignment="Left" Margin="10, 0, 0, 0" Text=""></TextBox>
             <!--#endregion-->
-            <!--#region ComboBox-->
+            <!--#region COMBO BOX-->
             <ComboBox Grid.Row="4" Grid.Column="2" Width="110" Height="20" SelectedIndex="0"
                       HorizontalAlignment="Left" Margin="10, 0, 0, 0" Name="ComboBoxTipo">
                 <ComboBoxItem>CEM-44</ComboBoxItem>
                 <ComboBoxItem>FUSION</ComboBoxItem>
                 <!-- Agrega más elementos según sea necesario -->
             </ComboBox>
-            <ComboBox Grid.Row="6" Grid.Column="1" Width="70" Height="25" SelectedIndex="0"
+            <ComboBox Grid.Row="7" Grid.Column="1" Width="70" Height="25" SelectedIndex="0"
                       HorizontalAlignment="Center" Margin="0, 0, 0, 0" x:Name="ComboBoxMode"
-                      Visibility="Hidden">
+                      Visibility="Visible">
                 <ComboBoxItem>t_info</ComboBoxItem>
                 <ComboBoxItem>t_debug</ComboBoxItem>
                 <!-- Agrega más elementos según sea necesario -->
             </ComboBox>
+            <ComboBox Grid.Row="6" Grid.Column="2" Width="40" Height="20" SelectedIndex="0"
+                      HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10, 0, 0, 0" x:Name="ComboBoxTimer"
+                      Visibility="Visible">
+                <ComboBoxItem>2</ComboBoxItem>
+                <ComboBoxItem>3</ComboBoxItem>
+                <ComboBoxItem>4</ComboBoxItem>
+                <ComboBoxItem>5</ComboBoxItem>
+                <!-- Agrega más elementos según sea necesario -->
+            </ComboBox>
             <!--#endregion-->
-            <!--#region CheckBox-->
+            <!--#region CHECK BOX-->
             <CheckBox Grid.Row="5" Grid.Column="2" Name="CheckBoxProtocol16" IsChecked="False"
                       VerticalAlignment="Center" HorizontalAlignment="Left" Margin="30, 0, 0, 0"
                       Checked="CheckBoxProtocol16_Checked" Unchecked="CheckBoxProtocol16_Unchecked"></CheckBox>
@@ -148,8 +167,8 @@
                       VerticalAlignment="Center" HorizontalAlignment="Left" Margin="105, 0, 0, 0"
                       Checked="CheckBoxProtocol32_Checked" Unchecked="CheckBoxProtocol32_Unchecked"></CheckBox>
             <!--#endregion-->
-            <!--#region btnConfig-->
-            <Button Grid.Row="6" Grid.Column="2" Width="100" Height="25" Background="#007ED6" BorderBrush="#007ED6"
+            <!--#region BUTTON-->
+            <Button Grid.Row="7" Grid.Column="2" Width="100" Height="25" Background="#007ED6" BorderBrush="#007ED6"
                     HorizontalAlignment="Left" VerticalAlignment="Center"
                     Margin="10, 0, 0, 0" Name="btnConfig"
                     Style="{DynamicResource ButtonStyle}" Click="BtnConfig_Click">
@@ -166,6 +185,13 @@
                     HorizontalAlignment="Right" VerticalAlignment="Center"
                     Margin="0, 0, 50, 0" Name="btnInfoProtocolo" Click="BtnInfoProtocolo_Click"
                     Style="{DynamicResource ButtonStyle}">
+                <TextBlock Text="?" Foreground="White" FontSize="20" Margin="0,0,0,0"
+                           VerticalAlignment="Center"></TextBlock>
+            </Button>
+            <Button Grid.Row="6" Grid.Column="2" Width="20" Height="25" Background="#007ED6" BorderBrush="#007ED6"
+                    HorizontalAlignment="Right" VerticalAlignment="Center"
+                    Margin="0, 0, 50, 0" Name="BtnInfoTimer"
+                    Style="{DynamicResource ButtonStyle}" Click="BtnInfoTimer_Click">
                 <TextBlock Text="?" Foreground="White" FontSize="20" Margin="0,0,0,0"
                            VerticalAlignment="Center"></TextBlock>
             </Button>

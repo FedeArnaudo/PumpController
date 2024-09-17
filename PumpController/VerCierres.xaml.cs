@@ -35,7 +35,7 @@ namespace PumpController
 
         private void BtnCerrar_Click(object sender, RoutedEventArgs e)
         {
-
+            Close();
         }
     }
 }

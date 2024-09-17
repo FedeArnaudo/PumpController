@@ -22,4 +22,15 @@
             return info;
         }
     }
+    public class TiempoEntreProcesos : IShowInfo
+    {
+        public string ShowInfo()
+        {
+            string info = $"La consulta entre procesos es el tiempo en el que\n" +
+                          $"el sistema le consulta al controlador por información.\n" +
+                          $"Esto puede ser util en estaciones con poco movimiento\n" +
+                          $"o donde la red tiene fallos frecuentes.";
+            return info;
+        }
+    }
 }

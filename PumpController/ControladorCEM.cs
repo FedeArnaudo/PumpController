@@ -85,12 +85,12 @@ namespace PumpController
         }
         public override void GrabarCierreDeTurno()
         {
-            _ = Log.Instance.WriteLog($"\nIniciando pedido de informacion del cierre de turno actual.\n", Log.LogType.t_info);
+            _ = Log.Instance.WriteLog($"\nIniciando: pedido de informacion del cierre de turno ACTUAL.\n", Log.LogType.t_info);
             Cierres.GrabarTurno(conectorCEM);
         }
         public override void GrabarCierreAnterior()
         {
-            _ = Log.Instance.WriteLog($"Iniciando pedido de informacion del cierre de turno anterior.\n", Log.LogType.t_info);
+            _ = Log.Instance.WriteLog($"Iniciando: pedido de informacion del cierre de turno ANTERIOR.\n", Log.LogType.t_info);
             Cierres = new GrabarCierreAnterior();
             Cierres.GrabarTurno(conectorCEM);
             Cierres = new GrabarCierreActual();
@@ -360,59 +360,114 @@ namespace PumpController
             {
                 try
                 {
+                    DataRow ultimoCierre = ConectorSQLite.Dt_query("SELECT * FROM Cierres ORDER BY id DESC LIMIT 1").Rows[0];
+                    string query;
 
-                    string query = $"UPDATE Cierres " +
+                    if (Convert.ToDouble(ultimoCierre[2]) == turno.TotalesMediosDePago[0].TotalMonto || Convert.ToDouble(ultimoCierre[3]) == turno.TotalesMediosDePago[0].TotalVolumen)
+                    {
+                        query = $"UPDATE Cierres " +
                                    $"SET monto_contado = {turno.TotalesMediosDePago[0].TotalMonto.ToString(CultureInfo.InvariantCulture)}, " +
                                        $"volumen_contado = {turno.TotalesMediosDePago[0].TotalVolumen.ToString(CultureInfo.InvariantCulture)}, " +
                                        $"monto_YPFruta = {turno.TotalesMediosDePago[3].TotalMonto.ToString(CultureInfo.InvariantCulture)}, " +
                                        $"volumen_YPFruta = {turno.TotalesMediosDePago[3].TotalVolumen.ToString(CultureInfo.InvariantCulture)} " +
                                    $"WHERE id = (SELECT MAX(id) FROM Cierres)";
 
-                    _ = ConectorSQLite.Query(string.Format(query));
+                        _ = ConectorSQLite.Query(string.Format(query));
 
-                    // Traer ID del cierre para poder referenciar los detalles
-                    DataTable table = ConectorSQLite.Dt_query("SELECT max(id) FROM Cierres");
+                        // Traer ID del cierre para poder referenciar los detalles
+                        DataTable table = ConectorSQLite.Dt_query("SELECT max(id) FROM Cierres");
 
-                    int id = Convert.ToInt32(table.Rows[0][0]);
+                        int id = Convert.ToInt32(table.Rows[0][0]);
 
-                    // Grabar CierresPorManguera
-                    Estacion estacion = Estacion.InstanciaEstacion;
-                    int contador = 0;
+                        // Grabar CierresPorManguera
+                        Estacion estacion = Estacion.InstanciaEstacion;
+                        int contador = 0;
 
-                    for (int i = 0; i < estacion.NumeroDeSurtidores; i++)
-                    {
-                        List<Surtidor> surtidores = estacion.NivelesDePrecio[0];
-                        for (int j = 0; j < surtidores[i].TipoDeSurtidor; j++)
+                        for (int i = 0; i < estacion.NumeroDeSurtidores; i++)
                         {
-                            query = "UPDATE CierresPorManguera " +
-                                   $"SET monto = {turno.TotalPorMangueras[contador].TotalVntasMonto}, " +
-                                       $"volumen = {turno.TotalPorMangueras[contador].TotalVntasVolumen} " +
-                                   $"WHERE id = {id} AND surtidor = {i + 1} AND manguera = {j + 1}";
+                            List<Surtidor> surtidores = estacion.NivelesDePrecio[0];
+                            for (int j = 0; j < surtidores[i].TipoDeSurtidor; j++)
+                            {
+                                query = "UPDATE CierresPorManguera " +
+                                       $"SET monto = {turno.TotalPorMangueras[contador].TotalVntasMonto}, " +
+                                           $"volumen = {turno.TotalPorMangueras[contador].TotalVntasVolumen} " +
+                                       $"WHERE id = {id} AND surtidor = {i + 1} AND manguera = {j + 1}";
+
+                                if (ConectorSQLite.Query(string.Format(query)) != 1)
+                                {
+                                    query = "INSERT INTO CierresPorManguera (id, surtidor, manguera, monto, volumen) " +
+                                           $"VALUES ({id}, {i + 1}, {j + 1},{turno.TotalPorMangueras[contador].TotalVntasMonto}, {turno.TotalPorMangueras[contador].TotalVntasVolumen})";
+                                    _ = ConectorSQLite.Query(string.Format(query));
+                                }
+
+                                contador++;
+                            }
+                        }
+
+                        // Grabar CierresPorProducto
+                        for (int i = 0; i < turno.TotalesPorProductosPorNivelesPorPeriodo[0][0].Count; i++)
+                        {
+                            query = $"UPDATE CierresPorProducto " +
+                                    $"SET monto = {turno.TotalesPorProductosPorNivelesPorPeriodo[0][0][i].TotalMonto}, " +
+                                        $"volumen = {turno.TotalesPorProductosPorNivelesPorPeriodo[0][0][i].TotalVolumen} " +
+                                    $"WHERE id = {id} AND producto = {i + 1}";
 
                             if (ConectorSQLite.Query(string.Format(query)) != 1)
                             {
-                                query = "INSERT INTO CierresPorManguera (id, surtidor, manguera, monto, volumen) " +
-                                       $"VALUES ({id}, {i + 1}, {j + 1},{turno.TotalPorMangueras[contador].TotalVntasMonto}, {turno.TotalPorMangueras[contador].TotalVntasVolumen})";
+                                query = "INSERT INTO CierresPorProducto (id, producto, monto, volumen) " +
+                                       $"VALUES ({id}, {i + 1}, {turno.TotalesPorProductosPorNivelesPorPeriodo[0][0][i].TotalMonto}, {turno.TotalesPorProductosPorNivelesPorPeriodo[0][0][i].TotalVolumen})";
                                 _ = ConectorSQLite.Query(string.Format(query));
                             }
-
-                            contador++;
                         }
                     }
-
-                    // Grabar CierresPorProducto
-                    for (int i = 0; i < turno.TotalesPorProductosPorNivelesPorPeriodo[0][0].Count; i++)
+                    else
                     {
-                        query = $"UPDATE CierresPorProducto " +
-                                $"SET monto = {turno.TotalesPorProductosPorNivelesPorPeriodo[0][0][i].TotalMonto}, " +
-                                    $"volumen = {turno.TotalesPorProductosPorNivelesPorPeriodo[0][0][i].TotalVolumen} " +
-                                $"WHERE id = {id} AND producto = {i + 1}";
+                        query = "INSERT INTO Cierres (monto_contado, volumen_contado, monto_YPFruta, volumen_YPFruta) VALUES ({0})";
+                        string row = string.Format("'{0}','{1}','{2}','{3}'",
+                            turno.TotalesMediosDePago[0].TotalMonto.ToString(CultureInfo.InvariantCulture),
+                            turno.TotalesMediosDePago[0].TotalVolumen.ToString(CultureInfo.InvariantCulture),
+                            turno.TotalesMediosDePago[3].TotalMonto.ToString(CultureInfo.InvariantCulture),
+                            turno.TotalesMediosDePago[3].TotalVolumen.ToString(CultureInfo.InvariantCulture));
 
-                        if (ConectorSQLite.Query(string.Format(query)) != 1)
+                        _ = ConectorSQLite.Query(string.Format(query, row));
+
+                        // Traer ID del cierre para poder referenciar los detalles
+                        DataTable table = ConectorSQLite.Dt_query("SELECT max(id) FROM Cierres");
+
+                        int id = Convert.ToInt32(table.Rows[0][0]);
+
+                        // Grabar CierresPorProducto
+                        query = "INSERT INTO CierresPorProducto (id, producto, monto, volumen) VALUES (" + id + ", {0})";
+                        for (int i = 0; i < turno.TotalesPorProductosPorNivelesPorPeriodo[0][0].Count; i++)
                         {
-                            query = "INSERT INTO CierresPorManguera (id, producto, monto, volumen) " +
-                                   $"VALUES ({id}, {i + 1}, {turno.TotalesPorProductosPorNivelesPorPeriodo[0][0][i].TotalMonto}, {turno.TotalesPorProductosPorNivelesPorPeriodo[0][0][i].TotalVolumen})";
-                            _ = ConectorSQLite.Query(string.Format(query));
+                            string aux =
+                                (i + 1).ToString() + "," +
+                                "'" + turno.TotalesPorProductosPorNivelesPorPeriodo[0][0][i].TotalMonto + "'," +
+                                "'" + turno.TotalesPorProductosPorNivelesPorPeriodo[0][0][i].TotalVolumen + "'";
+
+                            _ = ConectorSQLite.Query(string.Format(query, aux));
+                        }
+
+                        // Grabar CierresPorManguera
+                        Estacion estacion = Estacion.InstanciaEstacion;
+                        int contador = 0;
+
+                        query = "INSERT INTO CierresPorManguera (id, surtidor, manguera, monto, volumen) VALUES (" + id + ", {0})";
+                        for (int i = 0; i < estacion.NumeroDeSurtidores; i++)
+                        {
+                            List<Surtidor> surtidores = estacion.NivelesDePrecio[0];
+                            for (int j = 0; j < surtidores[i].TipoDeSurtidor; j++)
+                            {
+                                string aux =
+                                    (i + 1).ToString() + "," +
+                                    (j + 1).ToString() + "," +
+                                    "'" + turno.TotalPorMangueras[contador].TotalVntasMonto + "'," +
+                                    "'" + turno.TotalPorMangueras[contador].TotalVntasVolumen + "'";
+
+                                contador++;
+
+                                _ = ConectorSQLite.Query(string.Format(query, aux));
+                            }
                         }
                     }
                 }
@@ -421,7 +476,6 @@ namespace PumpController
                     throw new Exception($"Error en el metodo GrabarTurno. Excepcion: {e.Message}");
                 }
             }
-            throw new NotImplementedException();
         }
     }
 

@@ -13,12 +13,14 @@ namespace PumpController
                 IpControlador = "";
                 TipoControlador = "";
                 Protocolo = 0;
+                Timer = 0;
                 InfoLog = "";
             }
             public string ProyNuevoRuta { get; set; }
             public string IpControlador { get; set; }
             public string TipoControlador { get; set; }
             public int Protocolo { get; set; }
+            public int Timer { get; set; }
             public string InfoLog { get; set; }
         }
         private static readonly string configFile = Environment.CurrentDirectory + "/config.ini";
@@ -44,6 +46,7 @@ namespace PumpController
                     IpControlador = reader.ReadLine().Trim(),
                     TipoControlador = reader.ReadLine(),
                     Protocolo = Convert.ToInt32(reader.ReadLine()),
+                    Timer = Convert.ToInt32(reader.ReadLine()),
                     InfoLog = reader.ReadLine()
                 };
 
@@ -67,6 +70,7 @@ namespace PumpController
                     outputFile.WriteLine(infoConfig.IpControlador.Trim());
                     outputFile.WriteLine(infoConfig.TipoControlador.ToString());
                     outputFile.WriteLine(infoConfig.Protocolo.ToString());
+                    outputFile.WriteLine(infoConfig.Timer.ToString());
                     outputFile.WriteLine(infoConfig.InfoLog.ToString());
                 }
             }

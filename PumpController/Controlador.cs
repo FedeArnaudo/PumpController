@@ -15,7 +15,7 @@ namespace PumpController
         //private static 
 
         // Tiempo de espera entre cada procesamiento en segundos.
-        private static readonly int loopDelaySeconds = 2;
+        private static int loopDelaySeconds;
 
         public static bool endWork = false;
         public static bool pedirCierreAnterior = false;
@@ -81,6 +81,7 @@ namespace PumpController
                 {
                     case "CEM-44":
                         instancia = new ControladorCEM();
+                        loopDelaySeconds = infoConfig.Timer;
                         break;
                     default:
                         break;
@@ -89,6 +90,10 @@ namespace PumpController
             else if (infoConfig == null)
             {
                 return false;
+            }
+            else
+            {
+                loopDelaySeconds = infoConfig.Timer;
             }
             if (procesoPrincipal == null)
             {

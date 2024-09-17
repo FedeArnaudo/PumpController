@@ -325,28 +325,55 @@ namespace PumpController
             }
             return despachoTemp;
         }
+
+        /*
+         * Metodo para realizar el corte del turno actual.
+         */
         public CierreDeTurno InfoCierreDeTurnoActual()
         {
             byte[] mensaje = new byte[] { 0x07 };  //Comando para pedir la informacion del corte de turno actual
             byte[] respuesta = Log.Instance.GetLogLevel().Equals(Log.LogType.t_debug) ? LeerArchivo("Cierre") : EnviarComando(mensaje);
 
+            if (!File.Exists(Environment.CurrentDirectory + "/Cierre.txt"))
+            {
+                GuardarRespuesta(respuesta, "Cierre.txt");
+            }
+
             CierreDeTurno cierreDeTurno = InfoTurno(respuesta);
 
             return cierreDeTurno;
         }
+
+        /*
+         * Metodo para pedir información del turno actual (sin cortarlo).
+         */
         public CierreDeTurno InfoTurnoEnCurso()
         {
             byte[] mensaje = new byte[] { 0x08 };  //Comando para pedir la informacion del turno en curso
             byte[] respuesta = Log.Instance.GetLogLevel().Equals(Log.LogType.t_debug) ? LeerArchivo("Cierre") : EnviarComando(mensaje);
 
+            if (!File.Exists(Environment.CurrentDirectory + "/TurnoEnCurso.txt"))
+            {
+                GuardarRespuesta(respuesta, "TurnoEnCuerso.txt");
+            }
+
             CierreDeTurno turnoEnCurso = InfoTurno(respuesta);
 
             return turnoEnCurso;
         }
+
+        /*
+         * Metodo para traer la informacion del cierre anterior, al ultimo cortado.
+         */
         public CierreDeTurno InfoCierreDeTurnoAnterior()
         {
             byte[] mensaje = new byte[] { 0x0B };  //Comando para pedir la informacion del corte de turno anterior
             byte[] respuesta = Log.Instance.GetLogLevel().Equals(Log.LogType.t_debug) ? LeerArchivo("Cierre") : EnviarComando(mensaje);
+
+            if (!File.Exists(Environment.CurrentDirectory + "/CierreAnterior.txt"))
+            {
+                GuardarRespuesta(respuesta, "CierreAnterior.txt");
+            }
 
             CierreDeTurno cierreDeTurnoAnterior = InfoTurno(respuesta);
 
@@ -362,10 +389,6 @@ namespace PumpController
                 {
                     turno.TurnoSinVentas = true;
                     return turno;
-                }
-                if (!File.Exists(Environment.CurrentDirectory + "/Cierre.txt"))
-                {
-                    GuardarRespuesta(respuesta, "Cierre.txt");
                 }
 
                 int posicion = 1;
@@ -460,6 +483,12 @@ namespace PumpController
             }
             return turno;
         }
+
+        /*
+         * Metodo de comunicacion con el cem-44. De este metodo salen todas las comunicaciones.
+         * Se intetna enviar un comando y se trabaja con la respuesta.
+         * En caso de desconexión, cuenta con un manejo de reconexión.
+         */
         private byte[] EnviarComando(byte[] comando)
         {
             byte[] buffer = null;
@@ -475,6 +504,7 @@ namespace PumpController
                                       onRetry: (exception, TimeSpan, conttext) =>
                                       {
                                           pipeClient.Dispose();
+                                          pipeClient.Close();
                                           _ = Log.Instance.WriteLog($"\n\t  Excepción: {exception.Message.Trim()} Intento: {retries}", Log.LogType.t_error);
                                           retries++;
                                       }).ExecuteAndCapture(() =>
@@ -488,7 +518,6 @@ namespace PumpController
                     if (policyResult.Outcome != 0)
                     {
                         _ = Log.Instance.WriteLog($"  Fin de intentos...\n", Log.LogType.t_error);
-                        pipeClient.Close();
                         ReloadData();
                     }
                 }
@@ -500,6 +529,9 @@ namespace PumpController
             return buffer;
         }
 
+        /*
+         * Metodo que se encarga de actualizar la configuracion, en caso de que haya cambiado.
+         */
         private void ReloadData()
         {
             ipControlador = Configuracion.LeerConfiguracion().IpControlador;
@@ -525,6 +557,7 @@ namespace PumpController
             pos = i;
             return ret;
         }
+
         /*
          * Metodo para saltearse los valores que no son utilizados en la respuesta del CEM.
          * Al finalizar el proceso del metodo, el valor de la posicion queda seteada para
@@ -538,6 +571,7 @@ namespace PumpController
             }
             pos++;
         }
+
         /*
          * Se utiliza para testear las respuestas reales del Cem-44
          * se lee un .txt que contiene las respuestas y las guarda en un byte,

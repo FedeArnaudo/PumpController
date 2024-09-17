@@ -20,6 +20,7 @@ namespace PumpController
             InitializeComponent();
             Icon = new BitmapImage(new Uri("pack://application:,,,/PumpController;component/Images/LogoSurtidor.ico"));
             Loaded += new RoutedEventHandler(ConfiguracionForm_Load);
+            ComboBoxMode.Visibility = Visibility.Hidden;
         }
         private void ConfiguracionForm_Load(object sender, EventArgs e)
         {
@@ -38,18 +39,13 @@ namespace PumpController
                 {
                     CheckBoxProtocol32.IsChecked = true;
                 }
+                ComboBoxTimer.Text = infoConfig.Timer.ToString();
+
                 ComboBoxMode.Text = Log.LogType.t_info.ToString();
-                if (infoConfig.InfoLog.Equals(Log.LogType.t_debug))
+                if (infoConfig.InfoLog.Equals(Log.LogType.t_debug.ToString()))
                 {
-                    ComboBoxMode.Text = infoConfig.InfoLog;
+                    ComboBoxMode.Text = Log.LogType.t_debug.ToString();
                 }
-                /*StatusForm statusForm = new StatusForm
-                {
-                    Owner = this
-                };
-                Hide();
-                _ = statusForm.ShowDialog();
-                statusForm.Show();*/
             }
         }
         private void BtnConfig_Click(object sender, RoutedEventArgs e)
@@ -66,6 +62,7 @@ namespace PumpController
                     if (ComboBoxTipo.Text != null && ComboBoxTipo.Text != "")
                     {
                         infoConfig.TipoControlador = ComboBoxTipo.Text;
+                        infoConfig.Timer = Convert.ToInt32(ComboBoxTimer.Text);
                         infoConfig.InfoLog = ComboBoxMode.Text;
                         if (CheckBoxProtocol16.IsChecked != false)
                         {
@@ -165,6 +162,11 @@ namespace PumpController
         private void BtnInfoProtocolo_Click(object sender, RoutedEventArgs e)
         {
             showInfo = new ProtocoloInfo();
+            _ = MessageBox.Show(showInfo.ShowInfo());
+        }
+        private void BtnInfoTimer_Click(object sender, RoutedEventArgs e)
+        {
+            showInfo = new TiempoEntreProcesos();
             _ = MessageBox.Show(showInfo.ShowInfo());
         }
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
