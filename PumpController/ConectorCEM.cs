@@ -523,7 +523,7 @@ namespace PumpController
                 }
                 catch (Exception e)
                 {
-                    throw new Exception($"Error al enviar comando. Excepcón: {e.Message}");
+                    _ = Log.Instance.WriteLog($"Error al enviar comando. Excepcón: {e.Message}", Log.LogType.t_error);
                 }
             }
             return buffer;
