@@ -151,11 +151,14 @@
             </ComboBox>
             <ComboBox Grid.Row="6" Grid.Column="2" Width="40" Height="20" SelectedIndex="0"
                       HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10, 0, 0, 0" x:Name="ComboBoxTimer"
-                      Visibility="Visible">
+                      Visibility="Visible" MaxDropDownHeight="60">
                 <ComboBoxItem>2</ComboBoxItem>
                 <ComboBoxItem>3</ComboBoxItem>
                 <ComboBoxItem>4</ComboBoxItem>
                 <ComboBoxItem>5</ComboBoxItem>
+                <ComboBoxItem>6</ComboBoxItem>
+                <ComboBoxItem>7</ComboBoxItem>
+                <ComboBoxItem>8</ComboBoxItem>
                 <!-- Agrega más elementos según sea necesario -->
             </ComboBox>
             <!--#endregion-->
