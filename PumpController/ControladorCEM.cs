@@ -206,6 +206,7 @@ namespace PumpController
                     {
                         continue;
                     }
+                    Thread.Sleep(100);
 
                     /// Procesamiento de la venta anterior
                     if (tabla.Rows.Count == 0)
@@ -360,10 +361,16 @@ namespace PumpController
             {
                 try
                 {
-                    DataRow ultimoCierre = ConectorSQLite.Dt_query("SELECT * FROM Cierres ORDER BY id DESC LIMIT 1").Rows[0];
+                    DataTable dataTable = ConectorSQLite.Dt_query("SELECT * FROM Cierres ORDER BY id DESC LIMIT 1");
+                    DataRow ultimoCierre = null;
+
+                    if (dataTable.Rows.Count != 0)
+                    {
+                        ultimoCierre = ConectorSQLite.Dt_query("SELECT * FROM Cierres ORDER BY id DESC LIMIT 1").Rows[0];
+                    }
                     string query;
 
-                    if (Convert.ToDouble(ultimoCierre[2]) == turno.TotalesMediosDePago[0].TotalMonto || Convert.ToDouble(ultimoCierre[3]) == turno.TotalesMediosDePago[0].TotalVolumen)
+                    if (ultimoCierre != null && (Convert.ToDouble(ultimoCierre[2]) == turno.TotalesMediosDePago[0].TotalMonto || Convert.ToDouble(ultimoCierre[3]) == turno.TotalesMediosDePago[0].TotalVolumen))
                     {
                         query = $"UPDATE Cierres " +
                                    $"SET monto_contado = {turno.TotalesMediosDePago[0].TotalMonto.ToString(CultureInfo.InvariantCulture)}, " +
