@@ -1,0 +1,56 @@
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows Installer temporary files
+~$*
+
+# Windows Installer log files
+*.cab
+*.msi
+*.msm
+*.msp
+*.log
+
+# User-specific files
+# Windows Installer log files
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# User-specific files for Visual Studio for Mac
+.vs2019/
+
+# Windows Installer packages
+*.appx
+*.appxbundle
+*.appxupload
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Tye
+.tye/
+
+# User-specific files
+# Windows Installer log files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ASP.NET and Visual Studio for Mac files
+.vscode/
+.idea/
+.vs2019/

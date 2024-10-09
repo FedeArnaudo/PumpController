@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\C#\PumpController\PumpController\obj\Debug\
+C:\Users\Fde\Documents\C#\PumpController\PumpController\obj\Debug\
 PumpController
 none
 false
 DEBUG;TRACE
-D:\C#\PumpController\PumpController\App.xaml
+C:\Users\Fde\Documents\C#\PumpController\PumpController\App.xaml
 8-242999603
 
 211112730424
-1331892944425
+13324952856
 StatusForm.xaml;VerCierres.xaml;VerConfig.xaml;VerDespachos.xaml;VerIPs.xaml;VerProductos.xaml;VerSurtidores.xaml;VerTanques.xaml;
 
-True
+False
 
