@@ -20,6 +20,7 @@ namespace PumpController
             // Especifica la cultura que utiliza el punto como separador decimal
             culture = CultureInfo.InvariantCulture;
         }
+
         public Estacion ConfiguracionDeLaEstacion()
         {
             Estacion estacionTemp = Estacion.InstanciaEstacion;
@@ -492,40 +493,65 @@ namespace PumpController
         private byte[] EnviarComando(byte[] comando)
         {
             byte[] buffer = null;
-            using (NamedPipeClientStream pipeClient = new NamedPipeClientStream(ipControlador, nombreDelPipe))
-            {
-                try
-                {
-                    int retries = 1;
+            NamedPipeClientStream pipeClient = null;
 
-                    PolicyResult policyResult = Policy.Handle<Exception>()
-                        .WaitAndRetry(retryCount: 6,
-                                      sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
-                                      onRetry: (exception, TimeSpan, conttext) =>
+            try
+            {
+                int retries = 1;
+
+                // Política de reintentos
+                PolicyResult policyResult = Policy.Handle<Exception>()
+                    .WaitAndRetry(retryCount: 4,
+                                  sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(3, retryAttempt)),
+                                  onRetry: (exception, TimeSpan, conttext) =>
+                                  {
+                                      // Cerrar el pipe en caso de fallo
+                                      if (pipeClient != null)
                                       {
                                           pipeClient.Dispose();
-                                          pipeClient.Close();
-                                          _ = Log.Instance.WriteLog($"\n\t  Excepción: {exception.Message.Trim()} Intento: {retries}", Log.LogType.t_error);
-                                          retries++;
-                                      }).ExecuteAndCapture(() =>
+                                          pipeClient = null; // Limpiar el pipe para la nueva conexión
+                                      }
+                                      _ = Log.Instance.WriteLog($"\n\t  Excepción: {exception.Message.Trim()} Intento: {retries}", Log.LogType.t_error);
+                                      retries++;
+                                  }).ExecuteAndCapture(() =>
+                                  {
+                                      // Crear el pipeClient si está cerrado
+                                      if (pipeClient == null)
                                       {
-                                          pipeClient.Connect(5000);
-                                          pipeClient.Write(comando, 0, comando.Length);
-                                          buffer = new byte[pipeClient.OutBufferSize];
-                                          _ = pipeClient.Read(buffer, 0, buffer.Length);
-                                      });
-                    Controlador.CheckConexion((int)policyResult.Outcome);
-                    if (policyResult.Outcome != 0)
-                    {
-                        _ = Log.Instance.WriteLog($"  Fin de intentos...\n", Log.LogType.t_error);
-                        ReloadData();
-                    }
-                }
-                catch (Exception e)
+                                          pipeClient = new NamedPipeClientStream(ipControlador, nombreDelPipe);
+                                      }
+
+                                      // Conectar con tiempo de espera
+                                      pipeClient.Connect(5000);
+
+                                      // Enviar el comando
+                                      pipeClient.Write(comando, 0, comando.Length);
+
+                                      // Leer respuesta
+                                      buffer = new byte[pipeClient.OutBufferSize];
+                                      _ = pipeClient.Read(buffer, 0, buffer.Length);
+                                  });
+                // Verificación de resultado de conexión
+                Controlador.CheckConexion((int)policyResult.Outcome);
+                if (policyResult.Outcome != 0)
                 {
-                    _ = Log.Instance.WriteLog($"Error al enviar comando. Excepcón: {e.Message}", Log.LogType.t_error);
+                    _ = Log.Instance.WriteLog($"  Fin de intentos...\n", Log.LogType.t_error);
+                    ReloadData();
                 }
             }
+            catch (Exception e)
+            {
+                _ = Log.Instance.WriteLog($"Error al enviar comando. Excepcón: {e.Message}", Log.LogType.t_error);
+            }
+            finally
+            {
+                // Asegurarse de cerrar el pipe al final
+                if (pipeClient != null)
+                {
+                    pipeClient.Dispose();
+                }
+            }
+
             return buffer;
         }
 

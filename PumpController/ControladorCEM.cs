@@ -95,6 +95,10 @@ namespace PumpController
             Cierres.GrabarTurno(conectorCEM);
             Cierres = new GrabarCierreActual();
         }
+        public override void GrabarTurnoEnCurso()
+        {
+            throw new NotImplementedException();
+        }
 
         /*
          * Metodo para procesar la informacion que traer el CEM y la guarda en la base
@@ -327,11 +331,6 @@ namespace PumpController
             {
                 throw new Exception($"Error en el metodo GrabarProductos. Excepcion: {e}");
             }
-        }
-
-        public override void GrabarTurnoEnCurso()
-        {
-            throw new NotImplementedException();
         }
 
         public ICierres Cierres
