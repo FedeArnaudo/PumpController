@@ -86,6 +86,7 @@ namespace PumpController
         public override void GrabarCierreDeTurno()
         {
             _ = Log.Instance.WriteLog($"\nIniciando: pedido de informacion del cierre de turno ACTUAL.\n", Log.LogType.t_info);
+            Cierres = new GrabarCierreActual();
             Cierres.GrabarTurno(conectorCEM);
         }
         public override void GrabarCierreAnterior()
@@ -93,7 +94,7 @@ namespace PumpController
             _ = Log.Instance.WriteLog($"Iniciando: pedido de informacion del cierre de turno ANTERIOR.\n", Log.LogType.t_info);
             Cierres = new GrabarCierreAnterior();
             Cierres.GrabarTurno(conectorCEM);
-            Cierres = new GrabarCierreActual();
+            
         }
         public override void GrabarTurnoEnCurso()
         {
@@ -372,11 +373,11 @@ namespace PumpController
                     if (ultimoCierre != null && (Convert.ToDouble(ultimoCierre[2]) == turno.TotalesMediosDePago[0].TotalMonto || Convert.ToDouble(ultimoCierre[3]) == turno.TotalesMediosDePago[0].TotalVolumen))
                     {
                         query = $"UPDATE Cierres " +
-                                   $"SET monto_contado = {turno.TotalesMediosDePago[0].TotalMonto.ToString(CultureInfo.InvariantCulture)}, " +
-                                       $"volumen_contado = {turno.TotalesMediosDePago[0].TotalVolumen.ToString(CultureInfo.InvariantCulture)}, " +
-                                       $"monto_YPFruta = {turno.TotalesMediosDePago[3].TotalMonto.ToString(CultureInfo.InvariantCulture)}, " +
-                                       $"volumen_YPFruta = {turno.TotalesMediosDePago[3].TotalVolumen.ToString(CultureInfo.InvariantCulture)} " +
-                                   $"WHERE id = (SELECT MAX(id) FROM Cierres)";
+                                $"SET monto_contado = {turno.TotalesMediosDePago[0].TotalMonto.ToString(CultureInfo.InvariantCulture)}, " +
+                                    $"volumen_contado = {turno.TotalesMediosDePago[0].TotalVolumen.ToString(CultureInfo.InvariantCulture)}, " +
+                                    $"monto_YPFruta = {turno.TotalesMediosDePago[3].TotalMonto.ToString(CultureInfo.InvariantCulture)}, " +
+                                    $"volumen_YPFruta = {turno.TotalesMediosDePago[3].TotalVolumen.ToString(CultureInfo.InvariantCulture)} " +
+                                $"WHERE id = (SELECT MAX(id) FROM Cierres)";
 
                         _ = ConectorSQLite.Query(string.Format(query));
 
@@ -557,11 +558,7 @@ namespace PumpController
                 {
                     string query = "INSERT INTO Cierres (monto_contado, volumen_contado, monto_YPFruta, volumen_YPFruta) VALUES ({0})";
                     string row = string.Format(
-                        "'{0}','{1}','{2}','{3}'",
-                        turno.TotalesMediosDePago[0].TotalMonto = 0,
-                        turno.TotalesMediosDePago[0].TotalVolumen = 0,
-                        turno.TotalesMediosDePago[3].TotalMonto = 0,
-                        turno.TotalesMediosDePago[3].TotalVolumen = 0);
+                        "'{0}','{1}','{2}','{3}'", 0, 0, 0, 0);
 
                     _ = ConectorSQLite.Query(string.Format(query, row));
 
@@ -572,12 +569,9 @@ namespace PumpController
 
                     // Grabar CierresPorProducto
                     query = "INSERT INTO CierresPorProducto (id, producto, monto, volumen) VALUES (" + id + ", {0})";
-                    for (int i = 0; i < turno.TotalesPorProductosPorNivelesPorPeriodo[0][0].Count; i++)
+                    for (int i = 0; i < Estacion.InstanciaEstacion.NumeroDeProductos; i++)
                     {
-                        string aux =
-                            (i + 1).ToString() + "," +
-                            "'" + 0.00 + "'," +
-                            "'" + 0.00 + "'";
+                        string aux = (i + 1).ToString() + "," + "'" + 0.00 + "'," + "'" + 0.00 + "'";
 
                         _ = ConectorSQLite.Query(string.Format(query, aux));
                     }
@@ -592,11 +586,7 @@ namespace PumpController
                         List<Surtidor> surtidores = estacion.NivelesDePrecio[0];
                         for (int j = 0; j < surtidores[i].TipoDeSurtidor; j++)
                         {
-                            string aux =
-                                (i + 1).ToString() + "," +
-                                (j + 1).ToString() + "," +
-                                "'" + 0.00 + "'," +
-                                "'" + 0.00 + "'";
+                            string aux = (i + 1).ToString() + "," + (j + 1).ToString() + "," + "'" + 0.00 + "'," + "'" + 0.00 + "'";
 
                             contador++;
 

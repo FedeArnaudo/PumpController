@@ -128,12 +128,13 @@ namespace PumpController
                         }
                     }
                     instancia.GrabarCierreDeTurno();
+
                     /// Espera para procesar nuevamente
                     Thread.Sleep(loopDelaySeconds * 1000);
                 }
                 catch (Exception e)
                 {
-                    _ = Log.Instance.WriteLog($"  {procesoPrincipal.Status} Error en el loop del controlador.\n\t  Excepción: {e.Message}\n", Log.LogType.t_error);
+                    _ = Log.Instance.WriteLog($" Estado del hilo: {procesoPrincipal.Status} - Error en el loop del controlador.\n\t  Excepción: {e.Message}\n", Log.LogType.t_error);
                 }
             }
         }
